@@ -9,7 +9,7 @@ function App() {
   let logged = localStorage.getItem('authenticated');
 
   if (logged !== 'true') {
-    return <Home></Home>;  
+    return <Router><Home></Home></Router>;
   }
 
   return(
