@@ -1,0 +1,26 @@
+{
+  "name": "enupe",
+  "version": "1.0.0",
+  "description": "Nucleo Pedagogico Online",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/N3Knekner/enupe.git"
+  },
+  "keywords": [
+    "online"
+  ],
+  "author": "equipe4",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/N3Knekner/enupe/issues"
+  },
+  "homepage": "https://github.com/N3Knekner/enupe#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
