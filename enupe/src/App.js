@@ -9,11 +9,11 @@ function App() {
   let logged = localStorage.getItem('authenticated');
 
   if (logged !== 'true') {
-    return <Router><Home></Home></Router>;
+    return <Router basename="/equipe4"><Home></Home></Router>;
   }
 
   return(
-    <Router>
+    <Router basename="/equipe4">
       <Route path="/">
         <Header />
         <Route path="/responsavel" exact><p>responsavel</p></Route>
