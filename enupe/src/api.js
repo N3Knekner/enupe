@@ -1,3 +1,3 @@
 import axios from 'axios';
 
-export default axios.create({ baseUrl:"http://192.168.2.3:3333"});
+export default axios.create({ baseUrl:"http://fabricadetecnologias.ifc-riodosul.edu.br/equipe4/server"});
