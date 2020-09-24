@@ -12,6 +12,8 @@ app.listen(8080);
 
 
 MySQL.begin("localhost","root","","ENUPE_BD"); //host,user,password,database_name
-MySQL.newUser("jubisclaiton","j@gmail.com"); //aki serao enviados todos os dados de cadastro
 
-MySQL.end();
+//MySQL.newUser("claiton","123","c@gmail.com","00000",false); //aki serao enviados todos os dados de cadastro
+//MySQL.login("claiton","123");
+
+//MySQL.end();

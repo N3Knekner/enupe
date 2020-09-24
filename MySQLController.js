@@ -18,33 +18,68 @@ class MySQLController{
   }
 
 
-
-
-  newUser(username,email){
-    let sql_string = "SELECT username, email FROM users WHERE username like '"+username+"' OR email like '"+email+"'";
+  newUser(username,userpassword,email,ip,stayConnected){
+    let sql_string = `SELECT username, email FROM users WHERE username LIKE '${username}' OR email LIKE '${email}'`;
 
     getReturnQuery(this.DATABASE,sql_string);
 
-    function alreadyStart(user){
-      console.log(user[0].username);
-      console.log(user[0].email);
+    function alreadyStart(database,user){
+      if(!user[0]){
+        sql_string = `INSERT INTO users(username,userpassword,email,ip,stayConnected) VALUE("${username}","${userpassword}","${email}","${ip}","${stayConnected}")`;
+        
+        database.query(sql_string, function (error, returned_data) {
+          if(error) console.log("Error: unregistered user\n" + error);// futuramente, isto ira interagir com o frontend
+          else console.log("User Sign!");// futuramente, isto ira interagir com o frontend
+        });
+      } else{
+        console.log("User Already Exists");// futuramente, isto ira interagir com o frontend
+      }
     }
-
 
     async function getReturnQuery(database,sql){
       await selectUserQuery(database,sql);
     }
+
     function selectUserQuery(database,sql) {
       return new Promise(function(resolve, reject) {
           database.query(sql_string, function (error, returned_data) {
            resolve(returned_data);
         });
       }).then(response => {
-        alreadyStart(response);
+        alreadyStart(database,response);
       });
     }
   }
 
+
+  login(username,userpassword){
+    let sql_string = `SELECT username FROM users WHERE username LIKE '${username}' AND userpassword LIKE '${userpassword}'`;
+
+    getReturnQuery(this.DATABASE,sql_string);
+
+    function alreadyStart(database,user){
+      if(user[0]){
+        console.log("User Logged!");// futuramente, isto ira interagir com o frontend
+      } else{
+        console.log("User not found or incorrect credentials");// futuramente, isto ira interagir com o frontend
+      }
+    }
+
+    async function getReturnQuery(database,sql){
+      await selectUserQuery(database,sql);
+    }
+
+    function selectUserQuery(database,sql) {
+      return new Promise(function(resolve, reject) {
+          database.query(sql_string, function (error, returned_data) {
+           resolve(returned_data);
+        });
+      }).then(response => {
+        alreadyStart(database,response);
+      });
+    }
+
+  }
 
 
   end(){
