@@ -82,6 +82,16 @@ class MySQLController{
   }
 
 
+  newOccurrence(subject_matter,data_time,txt,sender,address,importance){
+    let sql_string = `INSERT INTO occurrence(subject_matter,data_time,txt,sender,address,importance) VALUE("${subject_matter}","${data_time}","${txt}","${sender}","${address}","${importance}")`;
+
+    this.DATABASE.query(sql_string, function (error, returned_data) {
+      if(error) console.log("Error: unregistered occurrence\n" + error);// futuramente, isto ira interagir com o frontend
+        else console.log("Registered Occurrence!");// futuramente, isto ira interagir com o frontend
+    });
+  } 
+
+
   end(){
     this.DATABASE.end();
   }

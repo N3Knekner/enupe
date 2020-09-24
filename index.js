@@ -14,6 +14,9 @@ app.listen(8080);
 MySQL.begin("localhost","root","","ENUPE_BD"); //host,user,password,database_name
 
 //MySQL.newUser("claiton","123","c@gmail.com","00000",false); //aki serao enviados todos os dados de cadastro
+
 //MySQL.login("claiton","123");
+
+//MySQL.newOccurrence("TESTE ASSUNTO","2020-09-30","Blablabla blabla <- this is a txt",1,2,3);
 
 //MySQL.end();
