@@ -1,12 +1,10 @@
 const mysql = require('mysql');
 const UserManager = require('./UserManager.class');
 
-
-
 module.exports = class MySQLController extends UserManager{
 
-  sqlBegin(host,user,password,db_name){
 
+  sqlBegin(host,user,password,db_name){
     this.DATABASE = mysql.createConnection({
         host: host,
         user: user,
@@ -14,7 +12,13 @@ module.exports = class MySQLController extends UserManager{
         database: db_name
     });
 
-    this.DATABASE.connect((err) => {if(err) console.log("connection to DB fail")});
+    this.DATABASE.connect((err) => {
+      if(err){
+        console.log("connection to DB fail");
+        this.end();
+      }
+      else this.main();
+    });
   }
 
   sqlInsertion(query){

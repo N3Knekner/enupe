@@ -1,14 +1,48 @@
 const MySQLController = require("./MySQLController.class.js");
 const DATABASE = undefined;
-const response = false;
+const app = undefined;
 
 class System extends MySQLController{
 
-    super(){
-    }
+  begin(app,host,user,password,db_name){
+    this.app = app;
+    this.sqlBegin(host,user,password,db_name);
+  }
 
-  init(){
+  main(){
+    let system = this;
 
+    console.log("Server is ON");
+    
+    system.app.get('/', function(req,res) {
+        res.send('<h1>main</h1><br>');
+    });
+    
+    system.app.get('/login', function(req,res) {
+        res.write('<h1>login</h1><br>');
+        system.userLogin(res,system,req.ip,"evandro","321");//recebe do front-end
+    });
+
+    system.app.get('/sign', function(req,res) {
+      res.write('<h1>new user</h1><br>');
+
+      let name = "evandro"; //recebe do front-end
+      let password = "321"; //recebe do front-end
+      let email = "e@gmail.com"; //recebe do front-end
+
+      system.verifyUserIdentity(res,name,email);
+
+      system.newUser(name,password,email,req.ip);
+    });
+    
+    //MySQL.newOccurrence("TESTE ASSUNTO","2020-09-30","Blablabla blabla <- this is a txt",1,2,3);
+  }
+
+  userLogged(str){
+    this.app.get('/home', function(req,res) {
+      res.write(str);
+      res.end();
+    });
   }
 
 
