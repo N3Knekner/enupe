@@ -19,10 +19,10 @@ class Login extends React.Component {
                 </div>
                 <div className="flex flex-col">
                     <label className="text-gray-700 text-md font-bold mb-2" htmlFor="password">Senha</label>
-                    <input value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value, incorrect: [false, false]}); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:border-gray-600"+(this.state.incorrect[1]?" border-red-600":"")} id="password" type="password" placeholder="_" />
+                    <input value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value, incorrect: [false, false] }); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[1] ? " border-red-600" : "")} id="password" type="password" minlength="8" required placeholder="_" />
                     <span className="text-red-600">{(this.state.incorrect[1] ? "Senha incorreta." : "")}</span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between text-sm sm:text-lg">
                     <input type="submit" value="Entrar" className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:border-gray-600" />
                     <span className="text-gray-600 ml-4">Não tem uma conta? <Link className="text-blue-500 hover:underline shadow rounded md:shadow-none px-2 md:px-0" to="/cadastro">Cadastre-se!</Link></span>
                 </div>

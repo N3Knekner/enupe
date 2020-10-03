@@ -39,9 +39,9 @@ class SignIn extends React.Component {
                     <input value={this.state.passwordConfirm} onChange={(e) => { this.setState({ passwordConfirm: e.target.value }, this.checkPassowrdEquals); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:" + (!this.state.requiriments[1] ? "border-red-600" : "border-gray-600")} name="passwordComfirm" id="passwordComfirm" type="password" placeholder="Comfirme sua senha" />
                     <span className="text-red-600 mb-3 text-sm">{(!this.state.requiriments[1] ? "As senhas não coincidem." : "")}</span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between text-sm sm:text-lg">
                     <input type="submit" value="Cadastrar" className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:border-gray-600" />
-                    <span className="text-gray-600 text-left">Já tem uma conta? <Link className="text-blue-500 hover:underline shadow rounded md:shadow-none px-2 md:px-0" to="/">Entre!</Link></span>
+                    <span className="text-gray-600 text-left ml-4">Já tem uma conta? <Link className="text-blue-500 hover:underline shadow rounded md:shadow-none px-2 md:px-0" to="/">Entre!</Link></span>
                 </div>
             </form>
         );
