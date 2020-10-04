@@ -74,14 +74,14 @@ code {
 
 @keyframes leftToHeader{
   from {min-height: 100vh; max-height: 100vh; flex-grow:1}
-  49.9%  {min-height: 4rem;  max-height: 4rem;  flex-grow: 1;}
-  50.1%  {max-height: 4rem;  flex-grow: 0; width:var(--animationBreakpoint);}
+  49.8%  {min-height: 4rem;  max-height: 4rem;  flex-grow: 1;}
+  50.2%  {max-height: 4rem;  flex-grow: 0; width:var(--animationBreakpoint);}
   to   {min-height: 4rem;  width:100vw;}
 }
 
 @keyframes rightToBody{
   from {padding-top: 0px;}
-  49.9%  {padding-top: 4rem; width: var(--animationBreakpoint); padding-left: 0px;}
-  50%  {padding-top: 0px;  width: 100vw; padding-left: calc(100vw - var(--animationBreakpoint));}
+  49.8%  {padding-top: 4rem; width: var(--animationBreakpoint); padding-left: 0px;}
+  50.2%  {padding-top: 0px;  width: 100vw; padding-left: calc(100vw - var(--animationBreakpoint));}
   to   {width:100vw; margin-left:0px}
 }
