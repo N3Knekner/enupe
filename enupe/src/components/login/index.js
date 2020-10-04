@@ -11,15 +11,15 @@ class Login extends React.Component {
     }
     render(){
         return (
-            <form className="flex flex-col w-full bg-white shadow-md rounded p-8" onSubmit={this.submitform}>
+            <form className="flex flex-col w-full bg-white shadow-md rounded p-8 mt-20" onSubmit={this.submitform}>
                 <div className="flex flex-col mb-4">
                     <label className="text-gray-700 text-md font-bold mb-2" htmlFor="email">Nome ou Email</label>
-                    <input value={this.state.email} onChange={(e)=>{this.setState({email:e.target.value,incorrect:[false,false]});}} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600"+(this.state.incorrect[0]?" border-red-600":"")} id="email" type="text" placeholder="__" />
+                    <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value, incorrect: [false, false] }); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[0] ? " border-red-600" : "")} id="email" type="text" required placeholder="__" />
                     <span className="text-red-600">{(this.state.incorrect[0] ? "Nome ou email incorretos." : "")}</span>
                 </div>
                 <div className="flex flex-col">
                     <label className="text-gray-700 text-md font-bold mb-2" htmlFor="password">Senha</label>
-                    <input value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value, incorrect: [false, false] }); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[1] ? " border-red-600" : "")} id="password" type="password" minlength="8" required placeholder="_" />
+                    <input value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value, incorrect: [false, false] }); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[1] ? " border-red-600" : "")} id="password" type="password" minLength="8" required placeholder="_" />
                     <span className="text-red-600">{(this.state.incorrect[1] ? "Senha incorreta." : "")}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm sm:text-lg">
