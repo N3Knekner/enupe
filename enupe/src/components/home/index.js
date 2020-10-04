@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Route} from 'react-router-dom';
 import SignIn from '../signIn';
 import Login from '../login';
 
+// Fast Scroll universal system
+let fastScroll;
+const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
+const executeScroll = () => scrollToRef(fastScroll);
+// End Fast Scroll
+
 function R(props) {
+
+  fastScroll = useRef(null); //Make the id for find an element to scroll
+
   return (
-    <div className="flex flex-row w-full justify-center flex-grow">
+    <div ref={fastScroll} className="flex flex-row w-full justify-center flex-grow">
       <div className="flex flex-col justify-center w-full max-w-lg p-4">
         <div className="flex w-full max-w-lg">
           <Route path="/" exact><Login /></Route>
@@ -26,7 +35,7 @@ function L(props) {
         <br />
         <p>Bem vindo ao portal de comunicação entre os estudantes, responsáveis e servidores.</p>
         <br />
-        <i className="arrow down arrow-hide self-center"></i>
+        <i className="arrow down arrow-hide self-center" onClick={executeScroll}></i>
       </div>
     </div>
   );

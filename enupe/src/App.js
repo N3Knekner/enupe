@@ -10,24 +10,31 @@ class App extends React.Component {
   //let logged = localStorage.getItem('authenticated');
   constructor(props) {
     super();
-    this.state = { haveHeader: false, invertOrientation:false};
+    this.state = { haveHeader: false, invertOrientation:false, fadeIn: false};
   }
 
   render(){
     document.getElementById('root').setAttribute('header', this.state.invertOrientation);
     return (
       <Router basename="/equipe4">
-        <Sides.L isHeader={this.state.haveHeader}>
+        <Sides.L isHeader={this.state.haveHeader} fadeIn={this.state.fadeIn}>
           <Switch>
             <Route path="/desenvolvedores">
-              <AnimationHandler onStart={() => { this.setState({ haveHeader: true }); }} timeout={600} onTimeout={() => { this.setState({ invertOrientation: true }); }} callback={() => { this.setState({ haveHeader: false, invertOrientation: false }); }}>
+              <AnimationHandler 
+                onConstruct={() => { this.setState({ fadeIn: true }); }}
+                onStart =   {() => { this.setState({ haveHeader: true }); }}
+                offset  = {500} 
+                timeout = {600} 
+                onTimeout = {() => { this.setState({ invertOrientation: true }); }} 
+                callback={() => { this.setState({ haveHeader: false, invertOrientation: false, fadeIn: false }); }}
+              >
                 <p>TESTE LEFT</p>
               </AnimationHandler>
             </Route>
             <Route path="/" component={Home.L}/>
           </Switch>
         </Sides.L>
-        <Sides.R isBody={this.state.haveHeader}>
+        <Sides.R isBody={this.state.haveHeader} fadeIn={this.state.fadeIn}>
           <Switch>
             <Route path="/desenvolvedores">
               <p>TESTE RIGHT</p>

@@ -3,16 +3,21 @@ import React from 'react';
 class AnimationHandler extends React.Component{
     constructor(props){
         super();
-        props.onStart();
-        this.state = { timedout:false};
+        props.onConstruct();
     }
+
     componentDidMount() {
+        this.offsetID = setInterval(
+            () => this.props.onStart(),
+            this.props.offset
+        );
         this.timerID = setInterval(
-            () => this.setState({ timedout: true }, this.props.onTimeout()),
-            this.props.timeout
-        )
+            () => this.props.onTimeout(),
+            this.props.timeout + this.props.offset
+        );
     }
     componentWillUnmount() {
+        clearInterval(this.offsetID);
         clearInterval(this.timerID);
         this.props.callback();
     }
