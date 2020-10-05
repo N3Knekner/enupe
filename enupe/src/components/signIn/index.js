@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 class SignIn extends React.Component {
     constructor(props) {
         super();
-        this.state = { name: "", email: "", matricula: "", password: "", passwordConfirm: "", incorrect: [false, false], requiriments: [true,true]};
+        this.state = { name: "", email: "", matricula: "", password: "", passwordConfirm: "",type : 0, incorrect: [false, false], requiriments: [true,true]};
     }
     render(){
         return (
@@ -48,20 +48,35 @@ class SignIn extends React.Component {
     }
     async submitForm(e){
         e.preventDefault();
-
-        const { data } = await Axios.post(Axios.defaults.baseUrl + "/signin", { 
-            name: this.state.name, 
-            email: this.state.email, 
+        let t = 0;
+        if (this.state.matricula.length === 7) {
+            console.log("É PROFESSOR");
+            t = 2;
+        }else{
+            const { data } = await Axios.post(Axios.defaults.baseUrl + "/user/matricula", {
+                matricula: this.state.matricula
+            });
+            if(data.exists){ console.log("A MATRICULA JA EXISTE"); t = 1;}
+            else { console.log("A MATRICULA TA LIVRE"); t = 0;}
+        }
+        this.setState({type: t});
+        this.signIn();
+        
+    }
+    async signIn() {
+        const { data } = await Axios.post(Axios.defaults.baseUrl + "/signin", {
+            name: this.state.name,
+            email: this.state.email,
             matricula: this.state.matricula,
             password: this.state.password,
             type: this.state.type
         });
-        
-        if (data.correct !== false) { 
+
+        if (data.correct !== false) {
             localStorage.setItem('authenticated', data.correct);
             //window.location.reload(false);
         }
-        else this.setState({incorrect:data.incorrect});
+        else this.setState({ incorrect: data.incorrect });
     }
     checkPassowrdCharacters(){
         const r = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/; //Regexp que determina se a string tem 8+ caracteres entre letras e numeros
