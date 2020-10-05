@@ -27,7 +27,7 @@ class SignIn extends React.Component {
                         <Tip tip="Se você é pai/responsável utilize a matrícula do aluno." direction="left"/>
                     </div>
                         
-                    <input value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="matricula" id="matricula" type="number" required placeholder="0000000000" />
+                    <input value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="matricula" id="matricula" min="1000000" max="9999999999" type="number" required placeholder="0000000000" />
                 </div>
                 <div className="flex flex-col">
                     <div className="flex flex-row mb-2 justify-between">
@@ -49,7 +49,9 @@ class SignIn extends React.Component {
     submitForm = async (e)=>{
         e.preventDefault();
         let t = 0;
-        if (this.state.matricula.length === 7) {
+        console.log(this.state.matricula.toString().length);
+        if (this.state.matricula.toString().length !== 7 && this.state.matricula.toString().length !== 10) return;
+        if (this.state.matricula.toString().length === 7) {
             console.log("É PROFESSOR");
             t = 2;
         }else{
@@ -61,7 +63,6 @@ class SignIn extends React.Component {
         }
         this.setState({type: t});
         this.signIn();
-        
     }
     signIn = async () =>{
         const { data } = await Axios.post(Axios.defaults.baseUrl + "/signin", {
