@@ -19,24 +19,15 @@ class System extends MySQLController{
     });
     
     system.app.post('/server/login', function(req,res) {
-      system.verifyUserIdentity(res,name,email);
       system.userLogin(res,system,req.ip,req.body.user,req.body.password);//recebe do front-end
     });
 
     system.app.post('/server/user/exists', function(req,res) {
-      system.verifyUserIdentity(res,req.body.user,req.body.user);
+      system.verifyUserIdentity(res,req.body.user,req.body.email);
     });
 
     system.app.get('/server/sign', function(req,res) {
-      res.write('<h1>new user</h1><br>');
-
-      let name = "evandro"; //recebe do front-end
-      let password = "evandro321"; //recebe do front-end
-      let email = "e@gmail.com"; //recebe do front-end
-
-      system.verifyUserIdentity(res,name,email);
-
-      system.newUser(name,password,email,req.ip);
+      system.newUser(req.body.user,req.body.password,req.body.user,req.ip);
     });
 
 

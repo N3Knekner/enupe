@@ -13,46 +13,44 @@ module.exports = class UserManager{
   }
 
   verifyUserIdentity(res,username = "",email = ""){
-    let sql_string = [`SELECT username FROM users WHERE username LIKE '${username}'`];
-    sql_string[1] = `SELECT email FROM users WHERE email LIKE '${email}'`;
+    let isExists = [false,""];
 
-    sql_string.forEach(element => {
-
-      Query(this.DATABASE);
-
-      function alreadyStart(response){
-        try{
-         if(response[0].username){
-            res.send({exists:true});
-          }
-          else if(response[0].email){
-            res.send({exists:true});
-          }
-          else{
-            res.send({exists:false});
-          } 
-        } catch(err){}
-      }
+    let sql_string = [`SELECT username FROM users WHERE username LIKE '${username}'`,`SELECT email FROM users WHERE email LIKE "${email}"`];
     
-      function Query(database){
-        new Promise(function(resolve) {
-          database.query(element, function (error,response) {
-              resolve(response);
-          });
-        }).then((res) => {alreadyStart(res)});
-      }
+    sql_string.forEach((element,index) => {
+      Query(this.DATABASE,element,index);
     });
+
+    function alreadyStart(response,index){
+      try{
+        if(response.username)
+          isExists = [true,"username"];
+        else(response.email)
+          isExists = [true,"email"];
+
+      } catch(err){;}
+
+      if(index == 1)
+        res.send({exists:isExists});
+    }
+
+    function Query(database,element,index){
+      new Promise(function(resolve) {
+        database.query(element, function (error,response) {
+            resolve(response);
+        });
+      }).then((res) => {alreadyStart(res[0],index);});
+    }
   }
   
-
-  userLogin(res,system,ip, username = undefined,userpassword = undefined){
+  userLogin(res,system,ip, user,userpassword){
     let DATABASE = this.DATABASE;
 
-    if(username && userpassword) standardLogin();
+    if(user && userpassword) standardLogin();
     else ipLogin(ip);
 
     function standardLogin(){
-      Query(`SELECT username FROM users WHERE username LIKE '${username}' AND userpassword LIKE '${userpassword}'`);
+      Query(`SELECT username FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${userpassword}'`);
     }
 
     function ipLogin(ip){ // vou alterar o nome qnd a criatividade ajudar
@@ -61,7 +59,8 @@ module.exports = class UserManager{
 
     function alreadyStart(user){
       try{
-        let str = {correct:"AQUELE HASH LÁ IGUAL DA APAD", incorrect:[false,false]};
+        let str = user[0] ? {correct:"hash sahcwdoilcndil", incorrect:[false,false]}:{correct:false, incorrect:[false,true]};
+        console.log(user[0]);
         res.send(str);
         system.userLogged(str);
       } catch {;}
