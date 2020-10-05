@@ -1,18 +1,17 @@
 const { DATABASE } = require("./System.class");
 module.exports = class UserManager{
 
-  newUser(username = undefined, userpassword = undefined, email = undefined, ip = "000.000.000"){
+  newUser(username, userpassword, email, matricula,type){
+    console.log("aaaaaaa");
     if(username && userpassword && email){
       let table = "users";
-      let rows = [['username'],['userpassword'],['email'],['ip']];
-
-      let values =  [[`"${username}"`],[`"${userpassword}"`],[`"${email}"`],[`SHA1("${ip}")`]];
-    
+      let rows = [['username'],['userpassword'],['email'],['matricula'],['type_u']];
+      let values =  [[`"${username}"`],[`"${userpassword}"`],[`"${email}"`],[`"${matricula}"`],[`${type}`]];
       this.sqlInsertion([[table],[rows],[values]]);
     }
   }
 
-  verifyUserIdentity(res,username = "",email = ""){
+  verifyUserIdentity(res, username = "", email = ""){
     let isExists = [false,""];
 
     let sql_string = [`SELECT username FROM users WHERE username LIKE '${username}'`,`SELECT email FROM users WHERE email LIKE "${email}"`];
@@ -66,6 +65,26 @@ module.exports = class UserManager{
       } catch {;}
     }
 
+
+    function Query(sql_string){
+      new Promise(function(resolve, reject) {
+         DATABASE.query(sql_string, function (error,response) {
+            resolve(response);
+        });
+      }).then((res) => {alreadyStart(res)});
+    }
+  }
+
+  verifyMatricula(res,matricula){
+    let DATABASE = this.DATABASE;
+
+    Query(`SELECT matricula FROM users WHERE (matricula LIKE '${matricula}'`);
+
+    function alreadyStart(matricula){
+      try{
+        let str = matricula[0].matricula ? res.send({exists:true}) : res.send({exists:false});;
+      } catch {;}
+    }
 
     function Query(sql_string){
       new Promise(function(resolve, reject) {
