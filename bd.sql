@@ -9,10 +9,11 @@ CREATE TABLE IF NOT EXISTS users (
     email varchar(80) not null,
     matricula varchar(10),
     ip varchar(80),
+    type_u int,
     stayConnected boolean
 );
 
-/*select * from users;
+select * from users;
 /*drop table users;
 
 insert into users(username,email) value("abimael","a@gmail.com");
