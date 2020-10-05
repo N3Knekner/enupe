@@ -31,7 +31,7 @@ class SignIn extends React.Component {
                 </div>
                 <div className="flex flex-col">
                     <div className="flex flex-row mb-2 justify-between">
-                        <label className="text-gray-700 text-md font-bold" htmlFor="matricula">Senha</label>
+                        <label className="text-gray-700 text-md font-bold" htmlFor="passowrd">Senha</label>
                         <Tip tip="A senha deve conter no mínimo 8 caracteres dentre letras e números." direction="left" />
                     </div>
                     <input value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value }, this.checkPassowrdCharacters); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:" + (!this.state.requiriments[0] ? "border-red-600" : "border-gray-600")} name="password" id="password" type="password" minLength="8" required placeholder="Digite sua senha" />
@@ -49,21 +49,30 @@ class SignIn extends React.Component {
     async submitForm(e){
         e.preventDefault();
 
-        const { data } = await Axios.post(Axios.defaults.baseUrl + "/signin", { a: this.state.email, b: this.state.password });
+        const { data } = await Axios.post(Axios.defaults.baseUrl + "/signin", { 
+            name: this.state.name, 
+            email: this.state.email, 
+            matricula: this.state.matricula,
+            password: this.state.password,
+            type: this.state.type
+        });
+        
         if (data.correct !== false) { 
             localStorage.setItem('authenticated', data.correct);
-            window.location.reload(false);
+            //window.location.reload(false);
         }
         else this.setState({incorrect:data.incorrect});
     }
     checkPassowrdCharacters(){
         const r = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/; //Regexp que determina se a string tem 8+ caracteres entre letras e numeros
-        if (!r.exec(this.state.password) && this.state.password!=="") this.setState((state, props) => ({ requiriments: [false, state.requiriments[1]] }));
+        if (!r.exec(this.state.password) && this.state.password!=="") 
+             this.setState((state) => ({ requiriments: [false, state.requiriments[1]] }));
         else this.setState({ requiriments: [true, true] });
     }
     checkPassowrdEquals() {
-        if (!this.state.password.startsWith(this.state.passwordConfirm)) this.setState((state, props) => ({ requiriments: [state.requiriments[0],false] }));
-        else this.setState((state, props) => ({ requiriments: [state.requiriments[0], true] }));
+        if (!this.state.password.startsWith(this.state.passwordConfirm)) 
+             this.setState((state) => ({ requiriments: [state.requiriments[0],false] }));
+        else this.setState((state) => ({ requiriments: [state.requiriments[0], true] }));
     }
 }
 
