@@ -46,7 +46,7 @@ class SignIn extends React.Component {
             </form>
         );
     }
-    async submitForm(e){
+    submitForm = async (e)=>{
         e.preventDefault();
         let t = 0;
         if (this.state.matricula.length === 7) {
@@ -63,7 +63,7 @@ class SignIn extends React.Component {
         this.signIn();
         
     }
-    async signIn() {
+    signIn = async () =>{
         const { data } = await Axios.post(Axios.defaults.baseUrl + "/signin", {
             name: this.state.name,
             email: this.state.email,
