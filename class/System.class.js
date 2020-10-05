@@ -11,13 +11,8 @@ class System extends MySQLController{
 
   main(){
     let system = this;
-
     console.log("Server is ON");
-    
-    system.app.get('/', function(req,res) {
-        res.send('<h1>main</h1><br>');
-    });
-    
+ 
     system.app.post('/server/login', function(req,res) {
       system.userLogin(res,system,req.ip,req.body.user,req.body.password);
     });
@@ -34,18 +29,7 @@ class System extends MySQLController{
       system.newUser(req.body.name,req.body.password,req.body.email,req.body.matricula,req.body.type);
     });
 
-
-    
-    //MySQL.newOccurrence("TESTE ASSUNTO","2020-09-30","Blablabla blabla <- this is a txt",1,2,3);
   }
-
-  userLogged(str){
-    this.app.get('/home', function(req,res) {
-      res.write(str);
-      res.end();
-    });
-  }
-
 
 }
 

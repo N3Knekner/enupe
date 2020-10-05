@@ -58,10 +58,8 @@ module.exports = class UserManager{
 
     function alreadyStart(user){
       try{
-        let str = user[0] ? {correct:"hash sahcwdoilcndil", incorrect:[false,false]}:{correct:false, incorrect:[false,true]};
-        console.log(user[0]);
-        res.send(str);
-        system.userLogged(str);
+        let obj = user[0] ? {correct:"hash sahcwdoilcndil", incorrect:[false,false]}:{correct:false, incorrect:[false,true]};
+        res.send(obj);
       } catch {;}
     }
 
@@ -78,7 +76,7 @@ module.exports = class UserManager{
   verifyMatricula(res,matricula){
     let DATABASE = this.DATABASE;
 
-    Query(`SELECT matricula FROM users WHERE (matricula LIKE '${matricula}'`);
+    Query(`SELECT matricula FROM users WHERE matricula LIKE '${matricula}'`);
 
     function alreadyStart(matricula){
       try{
