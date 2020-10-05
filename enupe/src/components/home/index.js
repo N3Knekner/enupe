@@ -15,7 +15,7 @@ function R(props) {
 
   return (
     <div ref={fastScroll} className="flex flex-row w-full justify-center flex-grow">
-      <div className="flex flex-col justify-center w-full max-w-lg p-4">
+      <div className="flex flex-col justify-center w-full max-w-lg md:p-4">
         <div className="flex w-full max-w-lg">
           <Route path="/" exact><Login /></Route>
           <Route path="/cadastro" exact><SignIn /></Route>

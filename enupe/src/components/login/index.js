@@ -14,7 +14,7 @@ class Login extends React.Component {
             <form className="flex flex-col w-full bg-white shadow-md rounded p-8 mt-20" onSubmit={this.submitform}>
                 <div className="flex flex-col mb-4">
                     <label className="text-gray-700 text-md font-bold mb-2" htmlFor="email">Nome ou Email</label>
-                    <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value, incorrect: [false, false] }); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[0] ? " border-red-600" : "")} id="email" type="text" required placeholder="__" />
+                    <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }, this.existsUser()); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[0] ? " border-red-600" : "")} id="email" type="text" required placeholder="__" />
                     <span className="text-red-600">{(this.state.incorrect[0] ? "Nome ou email incorretos." : "")}</span>
                 </div>
                 <div className="flex flex-col">
@@ -34,16 +34,21 @@ class Login extends React.Component {
         const r = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/; //Regexp que determina se a string tem 8+ caracteres entre letras e numeros
         if (!r.exec(this.state.password)) { this.setState({ incorrect: [false, true] }); return;};
     
-        const { data } = await Axios.post(Axios.defaults.baseUrl+"/login", { a:this.state.email, b:this.state.password});
+        const { data } = await Axios.post(Axios.defaults.baseUrl+"/login", { user:this.state.email, password:this.state.password});
 
         if(data.correct !== false){
             localStorage.setItem('authenticated', data.correct);
-            window.location.reload(false); //Precisa mesmo disso, eu tentei de todas as formas evitar
+            //window.location.reload(false); //Precisa mesmo disso, eu tentei de todas as formas evitar
         }else
         if (data.incorrect[0]) { 
             this.setState({ incorrect:[true,false]});
         }else
         if (data.incorrect[1]) { this.setState({ incorrect: [false, true]})}
+    }
+
+    existsUser = async () =>{
+        const { data } = await Axios.post(Axios.defaults.baseUrl + "/user/exists", { user: this.state.email});
+        this.setState({ incorrect: [data.exists,false]});
     }
 }
 
