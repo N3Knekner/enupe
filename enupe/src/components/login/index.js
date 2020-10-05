@@ -47,8 +47,10 @@ class Login extends React.Component {
     }
 
     existsUser = async () =>{
-        const { data } = await Axios.post(Axios.defaults.baseUrl + "/user/exists", { user: this.state.email});
-        this.setState({ incorrect: [data.exists,false]});
+        const o = {};
+        o[(this.state.email.includes('@') ? 'email' : ' user')] = this.state.email;
+        const { data } = await Axios.post(Axios.defaults.baseUrl + "/user/exists", 0);
+        this.setState({ incorrect: [data.exists[0],false]});
     }
 }
 
