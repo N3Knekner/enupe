@@ -12,9 +12,9 @@ module.exports = class UserManager{
     }
   }
 
-  verifyUserIdentity(res,username,email){
+  verifyUserIdentity(res,username = "",email = ""){
     let sql_string = [`SELECT username FROM users WHERE username LIKE '${username}'`];
-    sql_string[1] = `SELECT email FROM users WHERE  email LIKE '${email}'`;
+    sql_string[1] = `SELECT email FROM users WHERE email LIKE '${email}'`;
 
     sql_string.forEach(element => {
 
@@ -23,20 +23,19 @@ module.exports = class UserManager{
       function alreadyStart(response){
         try{
          if(response[0].username){
-            res.write(`User already exists`); //interagir com o front end
+            res.send({exists:true});
           }
           else if(response[0].email){
-            res.write(`Email already exists`); //interagir com o front end
+            res.send({exists:true});
           }
           else{
-            res.write("Permission to SIGN true"); //interagir com o front end
+            res.send({exists:false});
           } 
-          res.end();
-        } catch(err){console.log(err)}
+        } catch(err){}
       }
     
       function Query(database){
-        new Promise(function(resolve, reject) {
+        new Promise(function(resolve) {
           database.query(element, function (error,response) {
               resolve(response);
           });
@@ -62,9 +61,8 @@ module.exports = class UserManager{
 
     function alreadyStart(user){
       try{
-        let str = user[0] ? `user logged:${user[0].username}` : "incorrect credentials"
-        res.write(str);
-        res.end();
+        let str = {correct:"AQUELE HASH LÁ IGUAL DA APAD", incorrect:[false,false]};
+        res.send(str);
         system.userLogged(str);
       } catch {;}
     }

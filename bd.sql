@@ -18,7 +18,7 @@ insert into users(username,email) value("abimael","a@gmail.com");
 insert into users(username,email) value("jubisclaiton","j@gmail.com");
 
 SELECT username FROM users WHERE username LIKE 'claiton';SELECT email FROM users WHERE  email LIKE 'c@gmail.com';
-
+delete from users where id = 3;
 */
 
 
