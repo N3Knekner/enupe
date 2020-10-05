@@ -82,8 +82,8 @@ module.exports = class UserManager{
 
     function alreadyStart(matricula){
       try{
-        let str = matricula[0].matricula ? res.send({exists:true}) : res.send({exists:false});;
-      } catch {;}
+       matricula ? res.send({exists:true}) : res.send({exists:false});
+      } catch(err) {console.log(err)}
     }
 
     function Query(sql_string){
