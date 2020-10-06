@@ -7,7 +7,7 @@ export default class AntiSpam {
         const pointer = this.timeouts.length;
         this.timeouts.push( setTimeout(() => {
             this.isLastHandler(pointer)
-        }, 1000));
+        }, 500));
     }
     isLastHandler = (pointer) => {
         clearTimeout(this.timeouts[pointer]);
