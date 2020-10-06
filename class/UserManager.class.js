@@ -3,36 +3,39 @@ const sha256 = require("sha256");
 
 module.exports = class UserManager{
 
-  newUser(res, system, username, userpassword, email, matricula,type,ip){
+  newUser(res, username, userpassword, email, matricula,type,ip){
     if(username && userpassword && email){
       let hash = this.hashGenerator(type);
       let hashcode = sha256(hash += ip);
 
       res.send({correct:`"${hash}"`});
 
+      console.log(userpassword);
+      console.log(sha256(userpassword));
+
       let table = "users";
       let rows = [['username'],['userpassword'],['email'],['matricula'],['type_u'],['hashcode']];
-      let values =  [[`"${username}"`],[`"${userpassword}"`],[`"${email}"`],[`"${matricula}"`],[`${type}`],[`"${hashcode}"`]];
+      let values =  [[`"${username}"`],[`"${sha256(userpassword)}"`],[`"${email}"`],[`"${matricula}"`],[`${type}`],[`"${hashcode}"`]];
       this.sqlInsertion([[table],[rows],[values]]);
     }
   }
   
-  userLogin(res, ip,user,userpassword){
+  userLogin(res, system, ip,user,userpassword){
     let DATABASE = this.DATABASE;
-    let hash = this.hashGenerator(user[0].type);
-    let hashcode = sha256(hash + ip);
-
-    Query(`SELECT username,email FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${userpassword}'`);
+    
+    Query(`SELECT username,email,type_u FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${sha256(userpassword)}'`);
   
     function alreadyStart(user){
       try{
-        if(user){
+        if(user[0]){
+          let hash = system.hashGenerator(user[0].type_u);
+          let hashcode = sha256(hash + ip);
           res.send({correct:`"${hash}"`, incorrect:[false,false]});
-          Query(`UPDATE users SET hashcode = '${hashcode}' WHERE username LIKE '${user.username}' AND email LIKE '${user.email}'`,true);
+          Query(`UPDATE users SET hashcode = '${hashcode}' WHERE username LIKE '${user[0].username}' AND email LIKE '${user[0].email}'`,true);
         }
         else res.send({correct:false, incorrect:[false,true]});
 
-      } catch {;}
+      } catch(err) {console.log(err)}
     }
 
     function Query(sql_string,update=false){
@@ -40,7 +43,7 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {update ? "" : alreadyStart(res[0])});
+      }).then((res) => {update ? "" : alreadyStart(res)});
     }
   }
 
@@ -51,7 +54,7 @@ module.exports = class UserManager{
 
     function alreadyStart(user){
       try{
-        let obj = user ? {username:`${user.username}`, email:`${user.email}`, matricula:`${user.matricula}`} : {correct:false};
+        let obj = user[0] ? {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`} : {correct:false};
         res.send(obj);
       } catch {;}
     }
@@ -61,7 +64,7 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res[0])});
+      }).then((res) => {alreadyStart(res)});
     }
   }
 
@@ -76,9 +79,9 @@ module.exports = class UserManager{
 
     function alreadyStart(response,index){
       try{
-        if(response.username)
+        if(response[0].username)
           isExists = [true,"username"];
-        else(response.email)
+        else(response[0].email)
           isExists = [true,"email"];
 
       } catch(err){;}
@@ -92,7 +95,7 @@ module.exports = class UserManager{
         database.query(element, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res[0],index);});
+      }).then((res) => {alreadyStart(res,index);});
     }
   }
 
@@ -103,7 +106,7 @@ module.exports = class UserManager{
 
     function alreadyStart(matricula){
       try{
-       matricula ? res.send({exists:true}) : res.send({exists:false});
+       matricula[0] ? res.send({exists:true}) : res.send({exists:false});
       } catch(err) {console.log(err)}
     }
 
@@ -112,7 +115,7 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res[0])});
+      }).then((res) => {alreadyStart(res)});
     }
   }
 
