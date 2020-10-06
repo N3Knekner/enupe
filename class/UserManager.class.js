@@ -10,9 +10,6 @@ module.exports = class UserManager{
 
       res.send({correct:`"${hash}"`});
 
-      console.log(userpassword);
-      console.log(sha256(userpassword));
-
       let table = "users";
       let rows = [['username'],['userpassword'],['email'],['matricula'],['type_u'],['hashcode']];
       let values =  [[`"${username}"`],[`"${sha256(userpassword)}"`],[`"${email}"`],[`"${matricula}"`],[`${type}`],[`"${hashcode}"`]];
@@ -35,7 +32,7 @@ module.exports = class UserManager{
         }
         else res.send({correct:false, incorrect:[false,true]});
 
-      } catch(err) {console.log(err)}
+      } catch{}
     }
 
     function Query(sql_string,update=false){

@@ -37,5 +37,4 @@ class System extends MySQLController{
 
 }
 
-
 module.exports = new System();
