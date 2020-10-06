@@ -8,7 +8,7 @@ module.exports = class UserManager{
       let hash = this.hashGenerator(type);
       let hashcode = sha256(hash += ip);
 
-      res.send({correct:`"${hash}"`});
+      res.send({correct:`${hash}`});
 
       let table = "users";
       let rows = [['username'],['userpassword'],['email'],['matricula'],['type_u'],['hashcode']];
