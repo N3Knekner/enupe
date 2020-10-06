@@ -76,6 +76,8 @@ class SignIn extends React.Component {
 
     submitForm = async (e)=>{
         e.preventDefault();
+        await new VerifyExistence((data) => this.setState({incorrect: [(data.exists[1] === "username" ? data.exists[0] : false),this.state.incorrect[1]]})).parser(this.state.name);
+        await new VerifyExistence((data) => this.setState({incorrect: [this.state.incorrect[0],(data.exists[1] === "email" ? data.exists[0] : false)]})).parser(this.state.email); 
         if(this.state.incorrect[0] || this.state.incorrect[1] || this.state.incorrect[2]) return;
         let t = 0;
         const length = this.state.matricula.toString().length;
