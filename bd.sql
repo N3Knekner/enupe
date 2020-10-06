@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     userpassword varchar(80) not null,
     email varchar(80) not null,
     matricula varchar(10),
-    hashcode varchar(64),
+    hashcode varchar(80),
     type_u int,
     stayConnected boolean
 );

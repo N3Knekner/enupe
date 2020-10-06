@@ -6,13 +6,9 @@ module.exports = class UserManager{
   newUser(res, system, username, userpassword, email, matricula,type,ip){
     if(username && userpassword && email){
       let hash = this.hashGenerator(type);
-      let hashcode = hash;
-
-      console.log(system.hashGenerator(type));
+      let hashcode = sha256(hash += ip);
 
       res.send({correct:`"${hash}"`});
-
-      hashcode = sha256(hashcode += ip);
 
       let table = "users";
       let rows = [['username'],['userpassword'],['email'],['matricula'],['type_u'],['hashcode']];
@@ -21,24 +17,30 @@ module.exports = class UserManager{
     }
   }
   
-  userLogin(res,user,userpassword){
+  userLogin(res, ip,user,userpassword){
     let DATABASE = this.DATABASE;
+    let hash = this.hashGenerator(user[0].type);
+    let hashcode = sha256(hash + ip);
 
-    Query(`SELECT type FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${userpassword}'`);
+    Query(`SELECT username,email FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${userpassword}'`);
   
     function alreadyStart(user){
       try{
-        let obj = user[0] ? {correct:`"${this.hashGenerator(user[0].type)}"`, incorrect:[false,false]}:{correct:false, incorrect:[false,true]};
-        res.send(obj);
+        if(user){
+          res.send({correct:`"${hash}"`, incorrect:[false,false]});
+          Query(`UPDATE users SET hashcode = '${hashcode}' WHERE username LIKE '${user.username}' AND email LIKE '${user.email}'`,true);
+        }
+        else res.send({correct:false, incorrect:[false,true]});
+
       } catch {;}
     }
 
-    function Query(sql_string){
+    function Query(sql_string,update=false){
       new Promise(function(resolve, reject) {
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res)});
+      }).then((res) => {update ? "" : alreadyStart(res[0])});
     }
   }
 
@@ -49,18 +51,17 @@ module.exports = class UserManager{
 
     function alreadyStart(user){
       try{
-        let obj = user[0] ? {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`} : {correct:false};
+        let obj = user ? {username:`${user.username}`, email:`${user.email}`, matricula:`${user.matricula}`} : {correct:false};
         res.send(obj);
       } catch {;}
     }
-
 
     function Query(sql_string){
       new Promise(function(resolve, reject) {
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res)});
+      }).then((res) => {alreadyStart(res[0])});
     }
   }
 
@@ -111,7 +112,7 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res)});
+      }).then((res) => {alreadyStart(res[0])});
     }
   }
 

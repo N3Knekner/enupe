@@ -18,8 +18,7 @@ class System extends MySQLController{
     });
 
     system.app.post('/server/login', function(req,res) {
-     console.log(req.ip);
-      system.userLogin(res, req.body.user, req.body.password);
+      system.userLogin(res, req.ip, req.body.user, req.body.password);
     });
 
     system.app.post('/server/user/hash', function(req,res) {
@@ -33,12 +32,10 @@ class System extends MySQLController{
     system.app.post('/server/user/matricula', function(req,res) {
       system.verifyMatricula(res, req.body.matricula);
     });
-
   
   }
 
 }
-
 
 
 module.exports = new System();
