@@ -7,18 +7,18 @@ class AnimationHandler extends React.Component{
     }
 
     componentDidMount() {
-        this.offsetID = setInterval(
+        this.offsetID = setTimeout(
             () => this.props.onStart(),
             this.props.offset
         );
-        this.timerID = setInterval(
+        this.timerID = setTimeout(
             () => this.props.onTimeout(),
             this.props.timeout + this.props.offset
         );
     }
     componentWillUnmount() {
-        clearInterval(this.offsetID);
-        clearInterval(this.timerID);
+        clearTimeout(this.offsetID);
+        clearTimeout(this.timerID);
         this.props.callback();
     }
 

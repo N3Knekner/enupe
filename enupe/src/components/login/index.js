@@ -1,6 +1,7 @@
 import React from 'react';
 import Axios from '../../api.js';
-//import axios from 'axios';
+import AntiSpam from '../../classes/AntiSpam.js';
+import VerifyExistence from '../../classes/VerifyExistence.js';
 
 import { Link } from 'react-router-dom';
 
@@ -8,13 +9,18 @@ class Login extends React.Component {
     constructor(props) {
         super();
         this.state = {email:"",password:"",incorrect:[false,false]};
+        this.emailHandler = new AntiSpam(() => {
+            new VerifyExistence((data) => this.setState(
+                { incorrect: [!data.exists[0], false] }
+            )).parser(this.state.email); 
+        });
     }
     render(){
         return (
             <form className="flex flex-col w-full bg-white shadow-md rounded p-8" onSubmit={this.submitform}>
                 <div className="flex flex-col mb-4">
                     <label className="text-gray-700 text-md font-bold mb-2" htmlFor="email">Nome ou Email</label>
-                    <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }, this.existsUser); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[0] ? " border-red-600" : "")} id="email" type="text" required placeholder="__" />
+                    <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }); this.emailHandler.restart(e)}} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[0] ? " border-red-600" : "")} id="email" type="text" required placeholder="__" />
                     <span className="text-red-600">{(this.state.incorrect[0] ? "Nome ou email incorretos." : "")}</span>
                 </div>
                 <div className="flex flex-col">
@@ -44,13 +50,6 @@ class Login extends React.Component {
             this.setState({ incorrect:[true,false]});
         }else
         if (data.incorrect[1]) { this.setState({ incorrect: [false, true]})}
-    }
-
-    existsUser = async () =>{
-        const o = {};
-        o[(this.state.email.includes('@') ? 'email' : 'user')] = this.state.email;
-        const { data } = await Axios.post(Axios.defaults.baseUrl + "/user/exists", o);
-        this.setState({ incorrect: [!data.exists[0],false]});
     }
 }
 

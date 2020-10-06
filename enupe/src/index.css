@@ -93,3 +93,26 @@ code {
   50.2%  {padding-top: 0px;  width: 100vw; padding-left: calc(100vw - var(--animationBreakpoint));}
   to   {width:100vw; margin-left:0px}
 }
+
+.popup-content {
+  margin: auto;
+  background: rgb(255, 255, 255);
+  width: 100%;
+  max-width: 32rem;
+  padding: 5px;
+  border-radius: 3px;
+}
+.popup-arrow {
+  color: rgb(255, 255, 255);
+}
+[role='tooltip'].popup-content {
+  width: 200px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+[data-popup='tooltip'].popup-overlay {
+  background: transparent;
+}
