@@ -1,5 +1,6 @@
 import React from 'react';
 import Axios from "../../api.js";
+import ModalAlert from '../modalAlert';
 
 import Tip from '../tip';
 
@@ -8,61 +9,69 @@ import { Link } from 'react-router-dom';
 class SignIn extends React.Component {
     constructor(props) {
         super();
-        this.state = { name: "", email: "", matricula: "", password: "", passwordConfirm: "",type : 0, incorrect: [false, false], requiriments: [true,true]};
+        this.state = { name: "", email: "", matricula: "", password: "", passwordConfirm: "",type : 0, incorrect: [false, false], requiriments: [true,true], alert:false};
     }
     render(){
         return (
-            <form className="flex flex-col w-full bg-white shadow-md rounded p-8 mt-20" onSubmit={this.submitForm}>
+            <form className="flex flex-col w-full bg-white shadow-md rounded p-8" onSubmit={this.submitForm}>
                 <div className="flex flex-col mb-4">
-                    <label className="text-gray-700 text-md font-bold mb-2" htmlFor="name">Nome</label>
-                    <input value={this.state.name} onChange={(e) => { this.setState({ name: e.target.value }) }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="name" id="name" type="text" required placeholder="Digite seu nome completo" />
+                    <label className="text-gray-700 text-base font-bold mb-2" htmlFor="name">Nome</label>
+                    <input value={this.state.name} onChange={(e) => { this.setState({ name: e.target.value }) }} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="name" id="name" type="text" required placeholder="Digite seu nome completo" />
                 </div>
                 <div className="flex flex-col mb-4">
-                    <label className="text-gray-700 text-md font-bold mb-2" htmlFor="email">Email</label>
-                    <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="email" id="email" type="email" required placeholder="meuemail@mail.com" />
+                    <label className="text-gray-700 text-base font-bold mb-2" htmlFor="email">Email</label>
+                    <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="email" id="email" type="email" required placeholder="meuemail@mail.com" />
                 </div>
                 <div className="flex flex-col mb-4">
                     <div className="flex flex-row mb-2 justify-between">
-                        <label className="text-gray-700 text-md font-bold" htmlFor="matricula">Matrícula</label>
+                        <label className="text-gray-700 text-base font-bold" htmlFor="matricula">Matrícula</label>
                         <Tip tip="Se você é pai/responsável utilize a matrícula do aluno." direction="left"/>
                     </div>
                         
-                    <input value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="matricula" id="matricula" min="1000000" max="9999999999" type="number" required placeholder="0000000000" />
+                    <input value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }} className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" name="matricula" id="matricula" min="999999" max="9999999999" type="number" required placeholder="0000000000" />
                 </div>
                 <div className="flex flex-col">
                     <div className="flex flex-row mb-2 justify-between">
-                        <label className="text-gray-700 text-md font-bold" htmlFor="passowrd">Senha</label>
+                        <label className="text-gray-700 text-base font-bold" htmlFor="passowrd">Senha</label>
                         <Tip tip="A senha deve conter no mínimo 8 caracteres dentre letras e números." direction="left" />
                     </div>
-                    <input value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value }, this.checkPassowrdCharacters); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:" + (!this.state.requiriments[0] ? "border-red-600" : "border-gray-600")} name="password" id="password" type="password" minLength="8" required placeholder="Digite sua senha" />
+                    <input value={this.state.password} onChange={(e) => { this.setState({ password: e.target.value }, this.checkPassowrdCharacters); }} className={"shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:" + (!this.state.requiriments[0] ? "border-red-600" : "border-gray-600")} name="password" id="password" type="password" minLength="8" required placeholder="Digite sua senha" />
                     <span className="text-red-600 mb-3 text-sm">{(!this.state.requiriments[0] ? "Senha inválida." : "")}</span>
-                    <input value={this.state.passwordConfirm} onChange={(e) => { this.setState({ passwordConfirm: e.target.value }, this.checkPassowrdEquals); }} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:" + (!this.state.requiriments[1] ? "border-red-600" : "border-gray-600")} name="passwordComfirm" id="passwordComfirm" type="password" minLength="8" required placeholder="Comfirme sua senha" />
+                    <input value={this.state.passwordConfirm} onChange={(e) => { this.setState({ passwordConfirm: e.target.value }, this.checkPassowrdEquals); }} className={"shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:" + (!this.state.requiriments[1] ? "border-red-600" : "border-gray-600")} name="passwordComfirm" id="passwordComfirm" type="password" minLength="8" required placeholder="Comfirme sua senha" />
                     <span className="text-red-600 mb-3 text-sm">{(!this.state.requiriments[1] ? "As senhas não coincidem." : "")}</span>
                 </div>
-                <div className="flex items-center justify-between text-sm sm:text-lg">
+                <div className="flex items-center justify-between text-sm md:text-base">
                     <input type="submit" value="Cadastrar" className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:border-gray-600" />
                     <span className="text-gray-600 text-left ml-4">Já tem uma conta? <Link className="text-blue-500 hover:underline shadow rounded md:shadow-none px-2 md:px-0" to="/">Entre!</Link></span>
                 </div>
+                <ModalAlert open={this.state.alert} value={this.alertTexts[this.state.type]} close={()=>this.setState({alert: false})}></ModalAlert>
             </form>
         );
     }
+
+    alertTexts = [
+        <div>ATENÇÃO! <br/> Segundo os dados já coletados você é um ALUNO, clique em Confirmar para continuar. <br/> Caso você seja um responsável clique em Cancelar e prossiga criando uma conta do aluno antes de voltar a cadastrar-se.</div>,
+        <div>ATENÇÃO! <br/> Segundo os dados já coletados você é um RESPONSÁVEL, clique em Confirmar para continuar. <br/> Caso você seja um aluno aparentemente já existe alguem cadastrado com sua matrícula, prossiga clicando em Cancelar e contatando um admnistrador do sistema</div>,
+        <div>ATENÇÃO! <br/> Segundo os dados já coletados você é um SERVIDOR, clique em Confirmar para continuar. <br/> Caso você não seja um servidor clique em Cancelar e prossiga verificando a sua matrícula, caso esteja escrita corretamente contate um admnistrador do sistema</div>
+    ];
+
     submitForm = async (e)=>{
         e.preventDefault();
         let t = 0;
-        console.log(this.state.matricula.toString().length);
-        if (this.state.matricula.toString().length !== 7 && this.state.matricula.toString().length !== 10) return;
-        if (this.state.matricula.toString().length === 7) {
-            console.log("É PROFESSOR");
+        const length = this.state.matricula.toString().length;
+        if (length !== 7 && length !== 10) return;
+        if (length === 7) {
             t = 2;
         }else{
+            console.log("KRAI");
             const { data } = await Axios.post(Axios.defaults.baseUrl + "/user/matricula", {
                 matricula: this.state.matricula
             });
-            if(data.exists){ console.log("A MATRICULA JA EXISTE"); t = 1;}
-            else { console.log("A MATRICULA TA LIVRE"); t = 0;}
+            if(data.exists){ t = 1;}
+            else { t = 0;}
         }
-        this.setState({type: t});
-        this.signIn();
+        this.setState({type: t, alert:true});
+        //this.signIn();
     }
     signIn = async () =>{
         const { data } = await Axios.post(Axios.defaults.baseUrl + "/signin", {

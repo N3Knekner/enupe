@@ -2,14 +2,25 @@ import React from 'react';
 import { Popup } from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
-function ModalAlert(props) {
-    return (
-        <Popup trigger={open => (<span className="cursor-pointer select-none mx-2 px-3 rounded-full border border-gray-600 hover:shadow">?</span>)}
-            position={props.direction + ' center'}
-            closeOnDocumentClick>
-            <span className="text-sm">{props.tip}</span>
-        </Popup>
-    );
+class ModalAlert extends React.Component {
+    constructor(props) {
+        super();
+    }
+    render(){
+        return (
+            <Popup open={this.props.open} closeOnDocumentClick onClose={this.props.close}>
+                <div className="modal">
+                    <button className="close" onClick={this.props.close}>
+                            &times;
+                    </button>
+                    <p>
+                    {this.props.value}
+                    </p>
+                </div>
+            </Popup>
+
+        );
+    }
 }
 
 export default ModalAlert;
