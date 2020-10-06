@@ -80,9 +80,9 @@ module.exports = class UserManager{
     function alreadyStart(response,index){
       try{
         if(response[0].username)
-          isExists = [true,"username"];
+        isExists[0] ? isExists : isExists = [true,"username"];
         else(response[0].email)
-          isExists = [true,"email"];
+        isExists[0] ? isExists : isExists = [true,"email"];
 
       } catch(err){;}
 
