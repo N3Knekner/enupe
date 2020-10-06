@@ -27,7 +27,7 @@ module.exports = class UserManager{
         if(user[0]){
           let hash = system.hashGenerator(user[0].type_u);
           let hashcode = sha256(hash + ip);
-          res.send({correct:`"${hash}"`, incorrect:[false,false]});
+          res.send({correct:`${hash}`, incorrect:[false,false]});
           Query(`UPDATE users SET hashcode = '${hashcode}' WHERE username LIKE '${user[0].username}' AND email LIKE '${user[0].email}'`,true);
         }
         else res.send({correct:false, incorrect:[false,true]});
