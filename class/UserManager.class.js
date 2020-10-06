@@ -6,7 +6,7 @@ module.exports = class UserManager{
   newUser(res, username, userpassword, email, matricula,type,ip){
     if(username && userpassword && email){
       let hash = this.hashGenerator(type);
-      let hashcode = sha256(hash = ip);
+      let hashcode = sha256(hash + ip);
 
       res.send({correct:`${hash}`});
 
