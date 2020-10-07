@@ -1,5 +1,6 @@
 const System = require("./class/System.class.js");
 const express = require("express");
+const path = require('path');
 const cors = require("cors");
 const bodyParser = require('body-parser');
 
@@ -15,9 +16,9 @@ app.get('/*', function (req, res) {
 app.use(bodyParser.json());
 
 
-app.listen(8080, '200.135.58.18');
+app.listen(8080);
 
-System.begin(app,"localhost","root","","ENUPE_BD");
+System.begin(app,"200.135.58.18","equipe4","equipe04.","equipe4");
 
 
 
