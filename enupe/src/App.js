@@ -1,22 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import {Route, Switch, Link } from 'react-router-dom';
 
 import Home from './components/home';
 import Sides from './components/sides';
 import AnimationHandler from './components/animationHandler';
+import DevelopersCard from './components/developersCard';
+
+import AuthRouting from './classes/AuthRouting.js';
+
 import './tailwind.css';
 
 class App extends React.Component {
-  //let logged = localStorage.getItem('authenticated');
   constructor(props) {
     super();
+    AuthRouting(props.history.push);
     this.state = { haveHeader: false, invertOrientation:false, fadeIn: false};
   }
 
   render(){
     document.getElementById('root').setAttribute('header', this.state.invertOrientation);
     return (
-      <Router basename="/equipe4">
+      <>
         <Sides.L isHeader={this.state.haveHeader} fadeIn={this.state.fadeIn}>
           <Switch>
             <Route path="/desenvolvedores">
@@ -28,7 +32,7 @@ class App extends React.Component {
                 onTimeout = {() => { this.setState({ invertOrientation: true }); }} 
                 callback={() => { this.setState({ haveHeader: false, invertOrientation: false, fadeIn: false }); }}
               >
-                <p>TESTE LEFT</p>
+                <div className="flex w-full flex-col justify-center"><div className="flex w-full flex-row justify-center"><h1 className="text-white font-bold">EQUIPE DE DESENVOLVIMENTO</h1></div></div>
               </AnimationHandler>
             </Route>
             <Route path="/" component={Home.L}/>
@@ -37,7 +41,7 @@ class App extends React.Component {
         <Sides.R isBody={this.state.haveHeader} fadeIn={this.state.fadeIn}>
           <Switch>
             <Route path="/desenvolvedores">
-              <p>TESTE RIGHT</p>
+              <div className="flex w-full flex-col justify-center"><div className="flex flex-row justify-center"><DevelopersCard/></div></div>
             </Route>
             <Route path="/" component={Home.R}/>
           </Switch>
@@ -51,7 +55,7 @@ class App extends React.Component {
           </Switch>
           
         </Sides.R>
-      </Router>
+      </>
     );
   }
 

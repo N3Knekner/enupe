@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import SignIn from '../signIn';
 import Login from '../login';
+import Profile from '../profile';
 
 // Fast Scroll universal system
 let fastScroll;
@@ -16,9 +17,12 @@ function R(props) {
   return (
     <div ref={fastScroll} className="flex flex-row w-full justify-center flex-grow">
       <div className="flex flex-col justify-center w-full max-w-lg p-1 md:p-4">
-        <div className="flex w-full max-w-lg lg:pt-10">
-          <Route path="/" exact><Login /></Route>
-          <Route path="/cadastro" exact><SignIn /></Route>
+        <div className="flex w-full max-w-lg lg:pt-10 justify-center">
+          <Route path="/" exact><Login callback={(url)=>{props.history.push(url)}} /></Route>
+          <Route path="/cadastro" exact><SignIn callback={(url) => {props.history.push(url) }} /></Route>
+          <Route path="/perfil">
+            <Profile {...props}/>
+          </Route>
         </div>
         <span className="flex justify-center w-full max-w-lg text-gray-700 mt-3">Instituto Federal Catarinense</span>
         <span className="flex justify-center w-full max-w-lg text-gray-700">Câmpus Rio do Sul</span>

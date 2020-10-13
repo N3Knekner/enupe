@@ -2,6 +2,7 @@ import React from 'react';
 import Axios from '../../api.js';
 import AntiSpam from '../../classes/AntiSpam.js';
 import VerifyExistence from '../../classes/VerifyExistence.js';
+import AuthRouting from '../../classes/AuthRouting.js';
 
 import { Link } from 'react-router-dom';
 
@@ -51,7 +52,7 @@ class Login extends React.Component {
             sessionStorage.removeItem('authenticated');
             const storage = this.state.stayConnection ? localStorage : sessionStorage;
             storage.setItem('authenticated', data.correct);
-            //window.location.reload(false); //Precisa mesmo disso, eu tentei de todas as formas evitar
+            AuthRouting(this.props.callback);
         }else
         if (data.incorrect[0]) { 
             this.setState({ incorrect:[true,false]});

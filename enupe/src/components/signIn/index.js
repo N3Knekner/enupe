@@ -3,6 +3,7 @@ import Axios from "../../api.js";
 import ModalAlert from '../modalAlert';
 import AntiSpam from '../../classes/AntiSpam.js';
 import VerifyExistence from '../../classes/VerifyExistence.js';
+import AuthRouting from '../../classes/AuthRouting.js';
 
 import Tip from '../tip';
 
@@ -108,7 +109,7 @@ class SignIn extends React.Component {
 
         if (data.correct !== false) {
             localStorage.setItem('authenticated', data.correct);
-            //window.location.reload(false);
+            AuthRouting(this.props.callback);
         }
         else this.setState({ incorrect: data.incorrect });
     }

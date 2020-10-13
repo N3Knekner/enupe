@@ -65,7 +65,6 @@ code {
 
 #right.body{
   animation: rightToBody 1.2s ease;
-  padding-top: 4rem;
 }
 
 #left.half{
