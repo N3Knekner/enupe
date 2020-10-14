@@ -12,7 +12,7 @@ import './index.css';
 // As únicas coisas públicas são as exportadas, operador: export.
 // As demais variaveis, por experiência, prefiro definir getters e setters.
 
-const history = createBrowserHistory();
+const history = createBrowserHistory({ basename: '/equipe4/'});
 ReactDOM.render(
   <React.StrictMode>
     <Router basename="/equipe4">

@@ -17,6 +17,18 @@ code {
   background: gray;
 }
 
+@media (min-width: 1024px){ 
+  body{
+    --animationBreakpoint: 50vw;
+  }
+  .arrow-hide {
+    border:none!important;
+  }
+  .min-w-25{
+    min-width:25rem;
+  }
+}
+
 .arrow {
   border: solid white;
   border-width: 0 3px 3px 0;
@@ -25,14 +37,6 @@ code {
   width: 10px;
   height: 10px;
   animation: floating 3s infinite;
-}
-@media (min-width: 768px){ 
-  body{
-    --animationBreakpoint: 50vw;
-  }
-    .arrow-hide {
-      border:none!important;
-    }
 }
 @keyframes floating {
   from {transform: translateY(0px) rotate(45deg);animation-timing-function: cubic-bezier(0.8, 0, 1, 1);}

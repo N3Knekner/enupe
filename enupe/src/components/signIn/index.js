@@ -10,7 +10,7 @@ import Tip from '../tip';
 import { Link } from 'react-router-dom';
 
 class SignIn extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
         this.state = { name: "", email: "", matricula: "", password: "", passwordConfirm: "",type : 0, incorrect: [false, false, false], requiriments: [true,true], alert:false};
         this.nameHandler = new AntiSpam(() => {
@@ -28,9 +28,12 @@ class SignIn extends React.Component {
             )).parser(this.state.email); 
             });
     }
+    componentDidMount() {
+        AuthRouting(this.props.callback, "/cadastro");
+    }
     render(){
         return (
-            <form className="flex flex-col w-full bg-white shadow-md rounded p-8" onSubmit={this.submitForm}>
+            <form className="flex flex-col w-full bg-white shadow-md rounded p-8 min-w-25" onSubmit={this.submitForm}>
                 <div className="flex flex-col mb-4">
                     <label className="text-gray-700 text-base font-bold mb-2" htmlFor="name">Nome</label>
                     <input value={this.state.name} onChange={(e) => { this.nameHandler.restart(e); this.setState({ name: e.target.value }) }} className={"shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:" + (this.state.incorrect[0] ? "border-red-600" : "border-gray-600")} name="name" id="name" type="text" required placeholder="Digite seu nome completo" />

@@ -16,9 +16,12 @@ class Login extends React.Component {
             )).parser(this.state.email); 
         });
     }
+    componentDidMount(){
+        AuthRouting(this.props.callback);
+    }
     render(){
         return (
-            <form className="flex flex-col w-full bg-white shadow-md rounded p-8" onSubmit={this.submitform}>
+            <form className="flex flex-col w-full bg-white shadow-md rounded p-8 min-w-25" onSubmit={this.submitform}>
                 <div className="flex flex-col mb-4">
                     <label className="text-gray-700 text-md font-bold mb-2" htmlFor="email">Nome ou Email</label>
                     <input value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }); this.emailHandler.restart(e)}} className={"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-gray-600" + (this.state.incorrect[0] ? " border-red-600" : "")} id="email" type="text" required placeholder="__" />
