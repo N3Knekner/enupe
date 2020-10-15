@@ -32,7 +32,7 @@ module.exports = class UserManager{
         }
         else res.send({correct:false, incorrect:[false,true]});
 
-      } catch{}
+      } catch(err){;}
     }
 
     function Query(sql_string,update=false){
@@ -53,7 +53,7 @@ module.exports = class UserManager{
       try{
         let obj = user[0] ? {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`} : {correct:false};
         res.send(obj);
-      } catch {;}
+      } catch (err){;}
     }
 
     function Query(sql_string){
