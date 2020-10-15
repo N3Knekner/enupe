@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS ENUPE_BD;
-
 USE ENUPE_BD;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -9,11 +7,10 @@ CREATE TABLE IF NOT EXISTS users (
     email varchar(80) not null,
     matricula varchar(10),
     hashcode varchar(80),
-    type_u int,
-    stayConnected boolean
+    type_u int
 );
 
-select * from users;
+#select * from users;
 
 
 
