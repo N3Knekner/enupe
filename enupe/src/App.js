@@ -64,7 +64,7 @@ class App extends React.Component {
             <Switch>
               {/* Developers page body */}
               <Route path="/desenvolvedores">
-                <div className="flex w-full flex-col justify-center"><div className="flex flex-row justify-center"><DevelopersCarrousel/></div></div>
+                <div className="flex w-full flex-col md:flex-col-reverse justify-center"><DevelopersCarrousel/></div>
               </Route>
               {/* Perfil page infos */}
               <Route path="/perfil">

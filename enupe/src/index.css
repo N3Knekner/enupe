@@ -119,3 +119,18 @@ code {
 [data-popup='tooltip'].popup-overlay {
   background: transparent;
 }
+
+
+
+
+
+
+.carousel-open {
+  display: flex !important;
+  opacity: 100 !important;
+}
+.carousel-item {
+  display: none;
+  -webkit-transition: opacity 0.6s ease-out;
+  transition: opacity 0.6s ease-out;
+}
