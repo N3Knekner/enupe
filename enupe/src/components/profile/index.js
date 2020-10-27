@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import GetData from '../../classes/GetData.js';
+import { withRouter } from 'react-router';
 
 class Profile extends React.Component{
     constructor(props){
@@ -8,10 +9,10 @@ class Profile extends React.Component{
         this.state = {data:{}}
     }
     async componentDidMount(){
-        this.setState({ data: await GetData("/user/hash")});
-
         const hash = localStorage.getItem('authenticated') || sessionStorage.getItem('authenticated');
         if(hash == null) this.props.history.push('/');
+
+        this.setState({ data: await GetData("/user/hash")});
 
     }
     render() {
@@ -26,4 +27,4 @@ class Profile extends React.Component{
     }
 }
 
-export default Profile;
+export default withRouter(Profile);
