@@ -16,9 +16,12 @@ app.get('/*', function (req, res) {
 app.use(bodyParser.json());
 
 
-app.listen(8080, "200.135.58.18");
+//app.listen(8080, "200.135.58.18");
+app.listen(8080, "10.0.1.110");
 
-System.begin(app, "200.135.58.18", "equipe4", "Equipe04.", "equipe4");
+//System.begin(app, "200.135.58.18", "equipe4", "Equipe04.", "equipe4");
+
+System.begin(app, "10.0.1.110", "root", "", "ENUPE_BD");
 
 
 
