@@ -38,7 +38,7 @@ class App extends React.Component {
                 onTimeout = {() => { this.setState({ invertOrientation: true }); }} 
                 callback={() => { this.setState({ haveHeader: false, invertOrientation: false, fadeIn: false }); }}
               >
-                <div className="flex flex-grow flex-row justify-center"><div className="flex flex-grow flex-col justify-center"><Link to="/" className="w-20 pl-3">{"< Voltar"}</Link></div><div className="flex flex-grow flex-col justify-center"><h1 className="text-white font-bold justify-center md:pr-20">EQUIPE DE DESENVOLVIMENTO</h1></div></div>
+                <div className="flex w-full flex-col justify-center"><div className="flex w-full flex-row justify-center"><h1 className="text-white font-bold">EQUIPE DE DESENVOLVIMENTO</h1></div></div>
               </AnimationHandler>
             </Route>
 
