@@ -200,8 +200,9 @@ module.exports = class UserManager{
 
 
   //TESTE FUNCTION pros integrantes do grupo.
-  NOME_DA_MINHA_FUNCAO_IMPLEMENTADA(){
-    return "abc";
+  NOME_DA_FUNCAO_DO_SISTEMA(p1,p2){
+    p1+p2;
+    return "RETORNO ESPERADO";
   }
 
 

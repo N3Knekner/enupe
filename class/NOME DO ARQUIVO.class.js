@@ -4,7 +4,7 @@ const System = require("./System.class.js"); // NAO ALTERE ISSO
 module.exports = class SUACLASSE {
   constructor(app) {
     const sys = this;
-    app.get('/server/NOMEDOSEUTESTE', function (req, res) { // Para iciar o teste acesse essa URL
+    app.get('/server/NOMEDOSEUTESTE', function (req, res) { // Para iniciar o teste acesse essa URL <-----------
       sys.testInit();
       res.send(req.ip); //Block navigator reload
     });
