@@ -14,11 +14,11 @@ class System extends MySQLController{
     console.log("Server is ON");
     
     system.app.post('/server/signin', function(req,res) {
-      system.newUser(res, req.body.name, req.body.password, req.body.email, req.body.matricula, req.body.type, req.ip);
+      system.signin(res, req.body.name, req.body.password, req.body.email, req.body.matricula, req.body.type, req.ip);
     });
 
     system.app.post('/server/login', function(req,res) {
-      system.userLogin(res, system, req.ip, req.body.user, req.body.password);
+      system.login(res, system, req.ip, req.body.user, req.body.password);
     });
 
     system.app.post('/server/user/hash', function(req,res) {

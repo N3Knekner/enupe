@@ -3,7 +3,7 @@ const sha256 = require("sha256");
 
 module.exports = class UserManager{
 
-  newUser(res, username, userpassword, email, matricula,type,ip){
+  signin(res, username, userpassword, email, matricula,type,ip){
     if(username && userpassword && email){
       let hash = this.hashGenerator(type);
       let hashcode = sha256(hash + ip);
@@ -17,7 +17,7 @@ module.exports = class UserManager{
     }
   }
   
-  userLogin(res, system, ip,user,userpassword){
+  login(res, system, ip,user,userpassword){
     let DATABASE = this.DATABASE;
     
     Query(`SELECT username,email,type_u FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${sha256(userpassword)}'`);
@@ -46,13 +46,36 @@ module.exports = class UserManager{
 
   hashLogin(res,hash,ip){
     let DATABASE = this.DATABASE;
+    let Stage = 1;
+    let userBackup = undefined;
     
-    Query(`SELECT username,email,matricula FROM users WHERE hashcode like "${sha256(hash + ip)}";`);
+    Query(`SELECT username,email,matricula,type_u,id FROM users WHERE hashcode like "${sha256(hash + ip)}";`);
 
     function alreadyStart(user){
       try{
-        let obj = user[0] ? {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`} : {correct:false};
-        res.send(obj);
+        if(Stage == 1 && user[0].type_u != 2){ /// verificar se é 2 mesmo o servidor
+          let obj = {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`, authenticateServicer:false};
+          res.send(obj); // this is student
+        }
+        
+        else if(Stage == 1 && user[0].type_u == 2){ // verify atentication
+          Stage = 2;
+          userBackup = user;
+          Query(`SELECT id FROM user_servicerAuthenticated WHERE id = ${user[0].id}`);
+        }
+
+        else if(Stage == 2 && user[0].id){
+          let obj = {username:`${userBackup[0].username}`, email:`${userBackup[0].email}`, matricula:`${userBackup[0].matricula}`, authenticateServicer:true};
+          res.send(obj); // is servicer and authenticateServicer = true;
+        }
+
+        else if(Stage == 2){
+          let obj = {username:`${userBackup[0].username}`, email:`${userBackup[0].email}`, matricula:`${userBackup[0].matricula}`, authenticateServicer:false};
+          res.send(obj); // is servicer, but authenticateServicer = false;
+        }
+
+        else res.send({correct:false}); // login fail
+
       } catch (err){;}
     }
 
@@ -140,6 +163,114 @@ module.exports = class UserManager{
       return string;
     }
   }
+
+  authenticateServicer(matricula){
+    let DATABASE = this.DATABASE;
+    let stage = 1;
+    let ServicerID = null;
+    
+    Query(`SELECT id,matricula,type_u FROM users WHERE matricula LIKE '${matricula}'`);
+  
+    function alreadyStart(credentials){
+      try{
+        if(stage == 1 && credentials[0].type_u == 2){  ////////////////////////////// 2 == servidor eu presumo
+          stage = 2;
+          ServicerID = credentials[0].id;
+          Query(`SELECT authenticated FROM user_servicerAuthenticated WHERE authenticated = ${credentials[0].id}`);
+        }
+        else if(!credentials[0]){
+          res.send({authenticated:true}); // verificar com o andre
+          this.sqlInsertion([['user_servicerAuthenticated'],['id'],[ServicerID]]); //////////this <- pode dar erro
+        }
+        else{
+          res.send({authenticated:false}); // verificar com o andre
+        }
+
+      } catch(err){;}
+    }
+
+    function Query(sql_string){
+      new Promise(function(resolve, reject) {
+         DATABASE.query(sql_string, function (error,response) {
+            resolve(response);
+        });
+      }).then((res) => {alreadyStart(res)});
+    }
+  }
+
+  async logoff(matricula,userpassword){
+    let DATABASE = this.DATABASE;
+    let Stage = 1;
+    let idBackup = null;
+    let status = null;
+    
+    Query(`SELECT id,type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`);
+  
+    function alreadyStart(user){
+      if(user[0] != undefined || idBackup){
+        if(Stage == 1 && user[0]){
+          if(user[0].type_u == 2){
+            Stage = 2;
+            idBackup = user[0].id;
+            Query(`SELECT authenticated FROM user_servicerAuthenticated WHERE authenticated = ${user[0].id}`);
+            return;
+          }
+          else{
+            status = "user deleted";
+            Query(`DELETE FROM users WHERE id = ${user[0].id}`,true);
+            return;
+          }
+        }
+        
+        if(Stage == 2){
+          Stage = 3;
+          if(user[0] != undefined){
+            Query(`DELETE FROM user_servicerAuthenticated WHERE authenticated = ${user[0].authenticated}`);
+            return;
+          }
+        }
+
+        if(Stage == 3){
+          status = "Servicer Deleted";
+          Query(`DELETE FROM users WHERE id = ${idBackup}`,true);
+          return;
+        }
+      }
+
+      else{
+        status = "ERROR: logoff blocked";
+        returnStatus();
+      }
+    }
+
+    function returnStatus(){
+      console.log(status);
+      return status;
+    }
+
+    
+    function Query(sql_string,stop = false){
+      new Promise(function(resolve, reject) {
+         DATABASE.query(sql_string, function (error,response) {
+            resolve(response);
+        });
+      }).then((res) => {stop ? returnStatus() : alreadyStart(res)});
+    }
+
+  }
+
+
+
+
+
+
+
+  //TESTE FUNCTION pros integrantes do grupo.
+  NOME_DA_MINHA_FUNCAO_IMPLEMENTADA(){
+    return "abc";
+  }
+
+
 
 }
 
