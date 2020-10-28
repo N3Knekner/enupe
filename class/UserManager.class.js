@@ -46,36 +46,15 @@ module.exports = class UserManager{
 
   hashLogin(res,hash,ip){
     let DATABASE = this.DATABASE;
-    let Stage = 1;
-    let userBackup = undefined;
-    
-    Query(`SELECT username,email,matricula,type_u,id FROM users WHERE hashcode like "${sha256(hash + ip)}";`);
+    Query(`SELECT username,email,matricula FROM users WHERE hashcode like "${sha256(hash + ip)}";`);
 
     function alreadyStart(user){
       try{
-        if(Stage == 1 && user[0].type_u != 2){ /// verificar se é 2 mesmo o servidor
-          let obj = {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`, authenticateServicer:false};
-          res.send(obj); // this is student
+        if(user[0] != undefined){
+          let obj = {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`};
+          res.send(obj);
         }
-        
-        else if(Stage == 1 && user[0].type_u == 2){ // verify atentication
-          Stage = 2;
-          userBackup = user;
-          Query(`SELECT id FROM user_servicerAuthenticated WHERE id = ${user[0].id}`);
-        }
-
-        else if(Stage == 2 && user[0].id){
-          let obj = {username:`${userBackup[0].username}`, email:`${userBackup[0].email}`, matricula:`${userBackup[0].matricula}`, authenticateServicer:true};
-          res.send(obj); // is servicer and authenticateServicer = true;
-        }
-
-        else if(Stage == 2){
-          let obj = {username:`${userBackup[0].username}`, email:`${userBackup[0].email}`, matricula:`${userBackup[0].matricula}`, authenticateServicer:false};
-          res.send(obj); // is servicer, but authenticateServicer = false;
-        }
-
-        else res.send({correct:false}); // login fail
-
+        else res.send({correct:false});
       } catch (err){;}
     }
 
@@ -166,26 +145,19 @@ module.exports = class UserManager{
 
   authenticateServicer(matricula){
     let DATABASE = this.DATABASE;
-    let stage = 1;
-    let ServicerID = null;
-    
-    Query(`SELECT id,matricula,type_u FROM users WHERE matricula LIKE '${matricula}'`);
+    Query(`SELECT matricula,type_u FROM users WHERE matricula LIKE '${matricula}'`);
   
-    function alreadyStart(credentials){
+    function alreadyStart(user){
       try{
-        if(stage == 1 && credentials[0].type_u == 2){  ////////////////////////////// 2 == servidor eu presumo
-          stage = 2;
-          ServicerID = credentials[0].id;
-          Query(`SELECT authenticated FROM user_servicerAuthenticated WHERE authenticated = ${credentials[0].id}`);
+        if(user[0] != undefined){
+          if(user[0].type_u == 2){
+            Query(`UPDATE users SET type_u = 3 WHERE matricula = ${user[0].matricula}`);
+            res.send({correct:true});
+          }
+          else {
+            res.send({correct:false});
+          }
         }
-        else if(!credentials[0]){
-          res.send({authenticated:true}); // verificar com o andre
-          this.sqlInsertion([['user_servicerAuthenticated'],['id'],[ServicerID]]); //////////this <- pode dar erro
-        }
-        else{
-          res.send({authenticated:false}); // verificar com o andre
-        }
-
       } catch(err){;}
     }
 
@@ -200,61 +172,30 @@ module.exports = class UserManager{
 
   async logoff(matricula,userpassword){
     let DATABASE = this.DATABASE;
-    let Stage = 1;
-    let idBackup = null;
-    let status = null;
-    
-    Query(`SELECT id,type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`);
+  
+    Query(`SELECT type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`);
   
     function alreadyStart(user){
-      if(user[0] != undefined || idBackup){
-        if(Stage == 1 && user[0]){
-          if(user[0].type_u == 2){
-            Stage = 2;
-            idBackup = user[0].id;
-            Query(`SELECT authenticated FROM user_servicerAuthenticated WHERE authenticated = ${user[0].id}`);
-            return;
-          }
-          else{
-            status = "user deleted";
-            Query(`DELETE FROM users WHERE id = ${user[0].id}`,true);
-            return;
-          }
-        }
-        
-        if(Stage == 2){
-          Stage = 3;
-          if(user[0] != undefined){
-            Query(`DELETE FROM user_servicerAuthenticated WHERE authenticated = ${user[0].authenticated}`);
-            return;
-          }
-        }
-
-        if(Stage == 3){
-          status = "Servicer Deleted";
-          Query(`DELETE FROM users WHERE id = ${idBackup}`,true);
-          return;
-        }
+      if(user[0] != undefined){
+        Query(`DELETE FROM users WHERE id = ${user[0].id}`);
+        returnStatus("user deleted");
       }
-
       else{
-        status = "ERROR: logoff blocked";
-        returnStatus();
+        returnStatus("ERROR: logoff blocked");
       }
     }
 
-    function returnStatus(){
+    function returnStatus(status){
       console.log(status);
       return status;
     }
 
-    
-    function Query(sql_string,stop = false){
+    function Query(sql_string){
       new Promise(function(resolve, reject) {
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {stop ? returnStatus() : alreadyStart(res)});
+      }).then((res) => {alreadyStart(res)});
     }
 
   }

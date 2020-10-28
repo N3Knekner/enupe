@@ -22,9 +22,9 @@ app.use(bodyParser.json());
 //app.listen(8080, "200.135.58.18");
 app.listen(3333, "localhost");
 //System.begin(app, "200.135.58.18", "equipe4", "Equipe04.", "equipe4");
-System.begin(app, "localhost", "root", "", "ENUPE_BD");
+//System.begin(app, "localhost", "root", "", "ENUPE_BD");
 
-//LogoffAutoTest.begin(app);
+LogoffAutoTest.begin(app);
 
 
 
