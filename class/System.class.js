@@ -13,7 +13,7 @@ class System extends MySQLController{
     let system = this;
     console.log("Server is ON");
     
-    system.app.post('/equipe4/server/signin', function(req,res) {
+    system.app.post('/server/signin', function(req,res) {
       system.signin(res, req.body.name, req.body.password, req.body.email, req.body.matricula, req.body.type, req.ip);
     });
 
@@ -22,19 +22,19 @@ class System extends MySQLController{
      console.log('ai');
     });
 
-    system.app.post('/equipe4/server/login', function(req,res) {
+    system.app.post('/server/login', function(req,res) {
       system.login(res, system, req.ip, req.body.user, req.body.password);
     });
 
-    system.app.post('/equipe4/server/user/hash', function(req,res) {
+    system.app.post('/server/user/hash', function(req,res) {
       system.hashLogin(res, req.body.hash,req.ip);
     });
 
-    system.app.post('/equipe4/server/user/exists', function(req,res) {
+    system.app.post('/server/user/exists', function(req,res) {
       system.verifyUserIdentity(res, req.body.user, req.body.email);
     });
 
-    system.app.post('/equipe4/server/user/matricula', function(req,res) {
+    system.app.post('/server/user/matricula', function(req,res) {
       system.verifyMatricula(res, req.body.matricula);
     });
   
