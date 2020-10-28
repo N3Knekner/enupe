@@ -22,7 +22,7 @@ module.exports = class UserManager{
     
     Query(`SELECT username,email,type_u FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${sha256(userpassword)}'`);
   
-    function alreadyStart(user){
+    function callback(user){
       try{
         if(user[0]){
           let hash = system.hashGenerator(user[0].type_u);
@@ -40,7 +40,7 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {update ? "" : alreadyStart(res)});
+      }).then((res) => {update ? "" : callback(res)});
     }
   }
 
@@ -48,7 +48,7 @@ module.exports = class UserManager{
     let DATABASE = this.DATABASE;
     Query(`SELECT username,email,matricula FROM users WHERE hashcode like "${sha256(hash + ip)}";`);
 
-    function alreadyStart(user){
+    function callback(user){
       try{
         if(user[0] != undefined){
           let obj = {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`};
@@ -63,7 +63,7 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res)});
+      }).then((res) => {callback(res)});
     }
   }
 
@@ -76,7 +76,7 @@ module.exports = class UserManager{
       Query(this.DATABASE,element,index);
     });
 
-    function alreadyStart(response,index){
+    function callback(response,index){
       try{
         if(response[0].username)
         isExists[0] ? isExists : isExists = [true,"username"];
@@ -94,7 +94,7 @@ module.exports = class UserManager{
         database.query(element, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res,index);});
+      }).then((res) => {callback(res,index);});
     }
   }
 
@@ -103,7 +103,7 @@ module.exports = class UserManager{
 
     Query(`SELECT matricula FROM users WHERE matricula LIKE '${matricula}'`);
 
-    function alreadyStart(matricula){
+    function callback(matricula){
       try{
        matricula[0] ? res.send({exists:true}) : res.send({exists:false});
       } catch(err) {console.log(err)}
@@ -114,7 +114,7 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res)});
+      }).then((res) => {callback(res)});
     }
   }
 
@@ -147,7 +147,7 @@ module.exports = class UserManager{
     let DATABASE = this.DATABASE;
     Query(`SELECT matricula,type_u FROM users WHERE matricula LIKE '${matricula}'`);
   
-    function alreadyStart(user){
+    function callback(user){
       try{
         if(user[0] != undefined){
           if(user[0].type_u == 2){
@@ -166,36 +166,29 @@ module.exports = class UserManager{
          DATABASE.query(sql_string, function (error,response) {
             resolve(response);
         });
-      }).then((res) => {alreadyStart(res)});
+      }).then((res) => {callback(res)});
     }
   }
 
-  async logoff(matricula,userpassword){
+  async SignInOff(matricula,userpassword){
     let DATABASE = this.DATABASE;
   
-    Query(`SELECT type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`);
+    return await Query(`SELECT type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`);
   
-    function alreadyStart(user){
+    function callback(user){
       if(user[0] != undefined){
         Query(`DELETE FROM users WHERE id = ${user[0].id}`);
-        returnStatus("user deleted");
+        return "User deleted";
       }
       else{
-        returnStatus("ERROR: logoff blocked");
+        return "SignInOff blocked";
       }
     }
 
-    function returnStatus(status){
-      console.log(status);
-      return status;
-    }
-
-    function Query(sql_string){
-      new Promise(function(resolve, reject) {
-         DATABASE.query(sql_string, function (error,response) {
-            resolve(response);
-        });
-      }).then((res) => {alreadyStart(res)});
+    async function Query(sql_string){
+      return await new Promise(function(resolve, reject) {
+        DATABASE.query(sql_string, function (error,response) {resolve(response);});
+      }).then((res) => {return callback(res)});
     }
 
   }

@@ -1,36 +1,28 @@
 const test = require('tape');
 const System = require("./System.class.js");
 
-class LogoffAutoTest{
-
-  begin(app){
-    let system = this;
-    System.begin(app, "localhost", "root", "", "ENUPE_BD");//start main class to test;
-      app.get('/server/teste', function(req,res) {
-      console.log(req.ip);
-      system.testInit();
+module.exports = class LogoffAutoTest{
+  constructor(app){
+    const sys = this;
+    app.get('/server/teste', function(req,res) {
+      sys.testInit();
+      res.send(req.ip); //Block navigator reload
     });
   }
 
   testInit(){
-    console.log('testing..');
-    test('Excluir conta Comum', async (t) => {
-      t.plan(1);
-      const x = await System.logoff("123456789","e1234567");
-      t.equal(x,"user deleted");
-    });
-    
-    test('Excluir conta com Senha Incorreta', (t) => {
-      t.assert(System.logoff("123456789","c123456") === "ERROR: logoff blocked", "WORKS!");
-      t.end();
-    });
+    test('Teste de exclusão - SignInOff', async (t) => {
+      let res = await System.SignInOff("123456789", "c123456");
+      t.equals(res, "SignInOff blocked", "Não excluir conta com Senha Incorreta");
 
-    test('Excluir conta com Matricula Incorreta', (t) => {
-      t.assert(System.logoff("92345678","e1234567") === "ERROR: logoff blocked", "WORKS!");
+      res = await System.SignInOff("92345678", "e1234567");
+      t.equals(res, "SignInOff blocked", "Não excluir conta com Matricula Incorreta");
+
+      res = await System.SignInOff("123456789", "e1234567")
+      t.equals(res, "User deleted", "Excluir conta Comum");
+      
       t.end();
     });
   }
 }
-module.exports = new LogoffAutoTest();
-
 

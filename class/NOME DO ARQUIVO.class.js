@@ -1,25 +1,27 @@
 const test = require('tape'); //NAO ALTERE ISSO
 const System = require("./System.class.js"); // NAO ALTERE ISSO
 
-class YOUClassTest{ //DEFINA O NOME DE SUA CLASSE DE TESTE
+module.exports = class SUACLASSE {
+  constructor(app) {
+    const sys = this;
+    app.get('/server/NOMEDOSEUTESTE', function (req, res) { // Para iciar o teste acesse essa URL
+      sys.testInit();
+      res.send(req.ip); //Block navigator reload
+    });
+  }
 
-  begin(app){ //AKI É O INICIALIZADOR DA CLASSE
-    System.begin(app, "localhost", "root", "", "ENUPE_BD");// ESTE É O INICIALIZADOR DA MAIN BEGIN PARA TESTE
+  testInit() {
+    test('CATEGORIA DO TESTE', async (t) => {
+      let res = await System.NOME_DA_FUNCAO_DO_SISTEMA("PARAMENTRO 1", "PARAMETRO 2");
+      t.equals(res, "RETORNO ESPERADO", "TITULO DO TESTE");
 
+      // VOCE PODE REPETIR OS COMANDOS PARA OUTROS TESTES
+      /* res = await System.NOME_DA_FUNCAO_DO_SISTEMA("PARAMENTRO 1", "PARAMETRO 2");
+      t.equals(res, "RETORNO ESPERADO", "TITULO DO TESTE"); */
 
-
-    //SE VOCE LEU O TUTORIAL DO LINK https://www.luiztools.com.br/post/tdd-como-criar-unit-tests-em-node-js-com-tape/
-    // VOCE PODERÁ FAZER SEU TESTE ABAIXO
-
-
-
-    test('NOME DE MEU TESTE', (t) => {
-        t.assert(System.NOME_DA_MINHA_FUNCAO_IMPLEMENTADA() === "abc", "expected return");
-        t.end()  ;
+      t.end(); // SEMPRE MATENHA ESSE COMANDO NO FINAL
     });
   }
 }
-
-module.exports = new YOUClassTest(); // ALTERE PARA O MESMO NOME QUE VOCE DEFINIO NO INICIO
 
 
