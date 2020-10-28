@@ -13,10 +13,10 @@ module.exports = class LogoffAutoTest{
   testInit(){
     test('Teste de exclusão - SignInOff', async (t) => {
       let res = await System.SignInOff("123456789", "c123456");
-      t.equals(res, "SignInOff blocked", "Não excluir conta com Senha Incorreta");
+      t.equals(res, "SignInOff blocked", "Nao excluir conta com Senha Incorreta");
 
       res = await System.SignInOff("92345678", "e1234567");
-      t.equals(res, "SignInOff blocked", "Não excluir conta com Matricula Incorreta");
+      t.equals(res, "SignInOff blocked", "Nao excluir conta com Matricula Incorreta");
 
       res = await System.SignInOff("123456789", "e1234567")
       t.equals(res, "User deleted", "Excluir conta Comum");
