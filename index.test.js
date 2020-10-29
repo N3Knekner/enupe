@@ -1,3 +1,5 @@
+console.log("\n\n------ Tests inicializated ------ \n\n");
+
 const System = require("./class/System.class.js");
 const express = require("express");
 const cors = require("cors");
