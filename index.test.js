@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 //=======Tests=======//
 const LogoffAutoTest = require("./class/testLogoff.class.js");
+const testSQLinjection = require("./class/testSQLinjection.class");
 const SUACLASSE = require("./class/NOME DO ARQUIVO.class")
 
 /*const YOUClassTest = require("./class/NOME DO ARQUIVO.class.js");*/
@@ -22,6 +23,7 @@ System.begin(app, "localhost", "root", "", "ENUPE_BD");
 
 //=======Tests=======//
 new LogoffAutoTest(app);
+new testSQLinjection(app);
 new SUACLASSE(app);
 
 /* YOUClassTest(app); */

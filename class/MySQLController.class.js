@@ -66,6 +66,14 @@ module.exports = class MySQLController extends UserManager{
     }
 
   }
+  
+  detectSQLinjection(str) {
+    str = str.toLowerCase();
+    const keys = ['select', 'delete', 'update', 'insert', 'from', 'where', '=', '!', '(', ')', "'", '"'];
+    let clear = true;
+    keys.map((key) => { if (str.includes(key)) clear = false; });
+    return clear;
+  }
 
   end(){
     this.DATABASE.end();

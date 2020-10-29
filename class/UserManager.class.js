@@ -193,11 +193,7 @@ module.exports = class UserManager{
 
   }
 
-
-
-
-
-
+  
 
   //TESTE FUNCTION pros integrantes do grupo.
   NOME_DA_FUNCAO_DO_SISTEMA(p1,p2){
