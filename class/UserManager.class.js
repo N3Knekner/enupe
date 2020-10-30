@@ -43,7 +43,7 @@ module.exports = class UserManager extends MySQLController{
     async (user) => {
       try{
         if(user[0] != undefined){
-          let obj = {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`};
+          let obj = {username:user[0].username, email:user[0].email, matricula:user[0].matricula};
           res.send(obj);
         }
         else res.send({correct:false});
