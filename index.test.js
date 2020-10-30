@@ -1,4 +1,5 @@
-console.log("\n\n------ Tests inicializated ------ \n\n");
+console.clear();
+console.log("\n\n------ Tests mode inicializated ------ \n\n");
 
 const System = require("./class/System.class.js");
 const express = require("express");

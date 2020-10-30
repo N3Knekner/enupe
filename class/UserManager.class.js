@@ -1,8 +1,10 @@
 const { DATABASE, hashGenerator } = require("./System.class");
 const sha256 = require("sha256");
+const MySQLController = require("./MySQLController.class.js");
 
-module.exports = class UserManager{
+module.exports = class UserManager extends MySQLController{
 
+  //===== Queries =====//
   signin(res, username, userpassword, email, matricula,type,ip){
     if(username && userpassword && email){
       let hash = this.hashGenerator(type);
@@ -17,107 +19,110 @@ module.exports = class UserManager{
     }
   }
   
-  login(res, system, ip,user,userpassword){
-    let DATABASE = this.DATABASE;
+  async login(res, ip,user,userpassword){
     
-    Query(`SELECT username,email,type_u FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${sha256(userpassword)}'`);
-  
-    function callback(user){
-      try{
-        if(user[0]){
-          let hash = system.hashGenerator(user[0].type_u);
-          let hashcode = sha256(hash + ip);
-          res.send({correct:`${hash}`, incorrect:[false,false]});
-          Query(`UPDATE users SET hashcode = '${hashcode}' WHERE username LIKE '${user[0].username}' AND email LIKE '${user[0].email}'`,true);
-        }
-        else res.send({correct:false, incorrect:[false,true]});
+    const response = await this.Query(`SELECT username,email,type_u FROM users WHERE (username LIKE '${user}' OR email LIKE '${user}') AND userpassword LIKE '${sha256(userpassword)}'`, 
+      async (user)=>{
+        try {
+          if (user[0]) {
+            let hash = this.hashGenerator(user[0].type_u);
+            let hashcode = sha256(hash + ip);
+            await this.Query(`UPDATE users SET hashcode = '${hashcode}' WHERE username LIKE '${user[0].username}' AND email LIKE '${user[0].email}'`);
+            return { correct: `${hash}`, incorrect: [false, false] };
+          }
+          else return { correct: false, incorrect: [false, true] };
 
-      } catch(err){;}
-    }
-
-    function Query(sql_string,update=false){
-      new Promise(function(resolve, reject) {
-         DATABASE.query(sql_string, function (error,response) {
-            resolve(response);
-        });
-      }).then((res) => {update ? "" : callback(res)});
-    }
+        } catch (err) { console.log(err); }
+      }
+    );
+    res.send(response);
   }
 
   hashLogin(res,hash,ip){
-    let DATABASE = this.DATABASE;
-    Query(`SELECT username,email,matricula FROM users WHERE hashcode like "${sha256(hash + ip)}";`);
-
-    function callback(user){
+    this.Query(`SELECT username,email,matricula FROM users WHERE hashcode like "${sha256(hash + ip)}";`, 
+    async (user) => {
       try{
         if(user[0] != undefined){
           let obj = {username:`${user[0].username}`, email:`${user[0].email}`, matricula:`${user[0].matricula}`};
           res.send(obj);
         }
         else res.send({correct:false});
-      } catch (err){;}
-    }
-
-    function Query(sql_string){
-      new Promise(function(resolve, reject) {
-         DATABASE.query(sql_string, function (error,response) {
-            resolve(response);
-        });
-      }).then((res) => {callback(res)});
-    }
+      } catch (err) { res.send({ correct: false });}
+      }
+    );
   }
 
-  verifyUserIdentity(res, username = "", email = ""){
+  async verifyUserIdentity(res, username = "", email = ""){
     let isExists = [false,""];
-
     let sql_string = [`SELECT username FROM users WHERE username LIKE '${username}'`,`SELECT email FROM users WHERE email LIKE "${email}"`];
     
-    sql_string.forEach((element,index) => {
-      Query(this.DATABASE,element,index);
-    });
+    for (let i = 0; i < sql_string.length; i++){
 
-    function callback(response,index){
+      isExists = await this.Query(sql_string[i], callback);
+
+      if (i === sql_string.length - 1 || isExists[0]) {
+        await res.send({ exists: isExists });
+        break;
+      }
+    };
+
+    function callback(response){
       try{
         if(response[0].username)
-        isExists[0] ? isExists : isExists = [true,"username"];
-        else(response[0].email)
-        isExists[0] ? isExists : isExists = [true,"email"];
-
-      } catch(err){;}
-
-      if(index == 1)
-        res.send({exists:isExists});
-    }
-
-    function Query(database,element,index){
-      new Promise(function(resolve) {
-        database.query(element, function (error,response) {
-            resolve(response);
-        });
-      }).then((res) => {callback(res,index);});
+        return [true,"username"];
+        else if(response[0].email)
+        return [true,"email"];
+        else return[false, ""];
+      } catch (err) { return [false, ""];}
     }
   }
 
   verifyMatricula(res,matricula){
-    let DATABASE = this.DATABASE;
 
-    Query(`SELECT matricula FROM users WHERE matricula LIKE '${matricula}'`);
+    this.Query(`SELECT matricula FROM users WHERE matricula LIKE '${matricula}'`, callback);
 
     function callback(matricula){
       try{
        matricula[0] ? res.send({exists:true}) : res.send({exists:false});
       } catch(err) {console.log(err)}
     }
-
-    function Query(sql_string){
-      new Promise(function(resolve, reject) {
-         DATABASE.query(sql_string, function (error,response) {
-            resolve(response);
-        });
-      }).then((res) => {callback(res)});
-    }
   }
 
+  
+  authenticateServicer(matricula){
+    this.Query(`SELECT matricula,type_u FROM users WHERE matricula LIKE '${matricula}'`, 
+    async (user) => {
+      try{
+        if(user[0] != undefined){
+          if(user[0].type_u == 2){
+            this.Query(`UPDATE users SET type_u = 3 WHERE matricula = ${user[0].matricula}`);
+            res.send({correct:true});
+          }
+          else {
+            res.send({correct:false});
+          }
+        }
+      } catch(err){;}
+    }
+  );
+    
+  }
+  
+  async SignInOff(matricula,userpassword){
+    return await this.Query(`SELECT type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`, 
+      async (user) => {
+        if(user[0] != undefined){
+          this.Query(`DELETE FROM users WHERE id = ${user[0].id}`);
+          return "User deleted";
+        }
+        else{
+          return "SignInOff blocked";
+        }
+      }
+    );  
+  }
+  
+  //===== Utils =====//
   hashGenerator(type){
     let number = Math.ceil(Math.random() * 1000000);
     let randomized = sha256(number+randomString());
@@ -142,66 +147,15 @@ module.exports = class UserManager{
       return string;
     }
   }
-
-  authenticateServicer(matricula){
-    let DATABASE = this.DATABASE;
-    Query(`SELECT matricula,type_u FROM users WHERE matricula LIKE '${matricula}'`);
   
-    function callback(user){
-      try{
-        if(user[0] != undefined){
-          if(user[0].type_u == 2){
-            Query(`UPDATE users SET type_u = 3 WHERE matricula = ${user[0].matricula}`);
-            res.send({correct:true});
-          }
-          else {
-            res.send({correct:false});
-          }
-        }
-      } catch(err){;}
-    }
-
-    function Query(sql_string){
-      new Promise(function(resolve, reject) {
-         DATABASE.query(sql_string, function (error,response) {
-            resolve(response);
-        });
-      }).then((res) => {callback(res)});
-    }
-  }
-
-  async SignInOff(matricula,userpassword){
-    let DATABASE = this.DATABASE;
   
-    return await Query(`SELECT type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`);
-  
-    function callback(user){
-      if(user[0] != undefined){
-        Query(`DELETE FROM users WHERE id = ${user[0].id}`);
-        return "User deleted";
-      }
-      else{
-        return "SignInOff blocked";
-      }
-    }
-
-    async function Query(sql_string){
-      return await new Promise(function(resolve, reject) {
-        DATABASE.query(sql_string, function (error,response) {resolve(response);});
-      }).then((res) => {return callback(res)});
-    }
-
-  }
-
-  
-
   //TESTE FUNCTION pros integrantes do grupo.
   NOME_DA_FUNCAO_DO_SISTEMA(p1,p2){
     p1+p2;
     return "RETORNO ESPERADO";
   }
-
-
+  
+  
 
 }
 

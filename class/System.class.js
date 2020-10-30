@@ -1,38 +1,39 @@
-const MySQLController = require("./MySQLController.class.js");
-const DATABASE = undefined;
-const app = undefined;
+const UserManager = require("./UserManager.class.js");
 
-class System extends MySQLController{
+class System extends UserManager{
 
-  begin(app,host,user,password,db_name){
+  async begin(app,host,user,password,db_name){
     this.app = app;
-    this.sqlBegin(host,user,password,db_name);
+    const connected = await this.sqlBegin(host,user,password,db_name);
+    connected ? this.main() : this.closeServer();
   }
 
   main(){
-    let system = this;
-    console.log("Server is ON");
-    
-    system.app.post('/server/signin', function(req,res) {
-      system.signin(res, req.body.name, req.body.password, req.body.email, req.body.matricula, req.body.type, req.ip);
+    const t = this;
+    this.app.post('/server/signin', function(req,res) {
+      t.signin(res, req.body.name, req.body.password, req.body.email, req.body.matricula, req.body.type, req.ip);
     });
 
-    system.app.post('/server/login', function(req,res) {
-      system.login(res, system, req.ip, req.body.user, req.body.password);
+    this.app.post('/server/login', function(req,res) {
+      t.login(res, req.ip, req.body.user, req.body.password);
     });
 
-    system.app.post('/server/user/hash', function(req,res) {
-      system.hashLogin(res, req.body.hash,req.ip);
+    this.app.post('/server/user/hash', function(req,res) {
+      t.hashLogin(res, req.body.hash,req.ip);
     });
 
-    system.app.post('/server/user/exists', function(req,res) {
-      system.verifyUserIdentity(res, req.body.user, req.body.email);
+    this.app.post('/server/user/exists', function(req,res) {
+      t.verifyUserIdentity(res, req.body.user, req.body.email);
     });
 
-    system.app.post('/server/user/matricula', function(req,res) {
-      system.verifyMatricula(res, req.body.matricula);
+    this.app.post('/server/user/matricula', function(req,res) {
+      t.verifyMatricula(res, req.body.matricula);
     });
   
+  }
+
+  closeServer(){
+    process.exit(1);
   }
 
 }

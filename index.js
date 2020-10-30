@@ -4,6 +4,8 @@ const path = require('path');
 const cors = require("cors");
 const bodyParser = require('body-parser');
 
+console.clear();
+
 const app = express();
 
 app.use(cors());

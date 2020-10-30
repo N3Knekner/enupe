@@ -1,10 +1,9 @@
 const mysql = require('mysql');
-const UserManager = require('./UserManager.class');
 
-module.exports = class MySQLController extends UserManager{
+module.exports = class MySQLController{
 
 
-  sqlBegin(host,user,password,db_name){
+  async sqlBegin(host,user,password,db_name){
     this.DATABASE = mysql.createConnection({
         host: host,
         user: user,
@@ -12,13 +11,27 @@ module.exports = class MySQLController extends UserManager{
         database: db_name
     });
 
-    this.DATABASE.connect((err) => {
-      if(err){
-        console.log("connection to DB fail");
+    const pointer = this.DATABASE; // Promisses and the bug fixes
+    return await new Promise(function (resolve) {
+      pointer.connect((err) => {resolve(err);});
+    }).then((err)=>{
+      if (err) {
+        console.log(" [1;31mConnect to DataBase failed [0m");
         this.end();
+        return false;
       }
-      else this.main();
-    });
+      else {
+        console.log(" [1;32mConnect to DataBase successful [0m");
+        return true;
+      };
+    })
+  }
+
+  async Query(sql_string, callback = (res)=>{return res;}) {
+    const pointer = this.DATABASE;
+    return await new Promise(function (resolve) {
+      pointer.query(sql_string, function (error, response) { resolve(response); });
+    }).then((res) => { return callback(res) });
   }
 
   sqlInsertion(query){
@@ -29,10 +42,10 @@ module.exports = class MySQLController extends UserManager{
 
     function already(response){
       if(response){
-        console.log("Insertion Error"); //interagir com o front end
+        console.log("❌ Insertion Error"); //interagir com o front end
       }
       else{
-        console.log("Insertion done"); //interagir com o front end
+        console.log("✔ Insertion done"); //interagir com o front end
       }
     }
 
