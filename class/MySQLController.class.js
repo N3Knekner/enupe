@@ -1,7 +1,6 @@
 const mysql = require('mysql');
-
-module.exports = class MySQLController{
-
+const MailManager = require("./MailManager.class.js");
+module.exports = class MySQLController extends MailManager{
 
   async sqlBegin(host,user,password,db_name){
     this.DATABASE = mysql.createConnection({

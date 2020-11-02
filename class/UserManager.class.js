@@ -55,7 +55,7 @@ module.exports = class UserManager extends MySQLController{
   async verifyUserIdentity(res, username = "", email = ""){
     let isExists = [false,""];
     let sql_string = [`SELECT username FROM users WHERE username LIKE '${username}'`,`SELECT email FROM users WHERE email LIKE "${email}"`];
-    
+
     for (let i = 0; i < sql_string.length; i++){
 
       isExists = await this.Query(sql_string[i], callback);
@@ -146,6 +146,23 @@ module.exports = class UserManager extends MySQLController{
       });
       return string;
     }
+  }
+
+  keyRecovery(user){
+    let t = this;
+    this.Query(`SELECT email FROM users WHERE email like "${user}" or username like "${user}";`, 
+    async (user) => {
+      try{
+        if(user[0] != undefined){
+          let subject = "ENUPE - Recuperação de Senha";
+          let txt = 'Para recuperar sua senha clique no link:http://localhost:3000\nSe não foi você, fique atento a segurança de sua conta.';
+      
+          t.senderMail(t.mailConstructor(user[0].email,subject,txt));
+        }
+      } catch{};
+      }
+    );
+    
   }
   
   

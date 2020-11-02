@@ -1,11 +1,11 @@
 const UserManager = require("./UserManager.class.js");
-
 class System extends UserManager{
 
-  async begin(app,host,user,password,db_name){
+  async begin(app,db_host,db_user,db_password,db_name,email_host,email_port,addr_email,email_password){
     this.app = app;
-    const connected = await this.sqlBegin(host,user,password,db_name);
+    const connected = await this.sqlBegin(db_host,db_user,db_password,db_name);
     connected ? this.main() : this.closeServer();
+    this.mail_Begin(email_host,email_port,addr_email,email_password);
   }
 
   main(){
@@ -28,6 +28,10 @@ class System extends UserManager{
 
     this.app.post('/server/user/matricula', function(req,res) {
       t.verifyMatricula(res, req.body.matricula);
+    });
+
+    this.app.post('/server/user/keyRecovery', function(req,res) {
+      t.keyRecovery(req.body.user);
     });
   
   }

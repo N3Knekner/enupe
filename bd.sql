@@ -1,3 +1,4 @@
+create database if not exists ENUPE_BD;
 USE ENUPE_BD;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -14,7 +15,7 @@ insert into users(username,userpassword,email,matricula,hashcode,type_u) values 
 
 select * from users;
 
-delete from users where id = 11;
+#delete from users where id = 1;
 
 
 
