@@ -22,7 +22,7 @@ app.use(cors());
 
 app.listen(3333, "localhost");
 
-System.begin(app, "localhost", "root", "", "ENUPE_BD");
+System.begin(app, "localhost", "root", "", "ENUPE_BD","smtp.gmail.com",587,"tijolao.pc@gmail.com","socrepa.");
 
 //=======Tests=======//
 new LogoffAutoTest(app);
