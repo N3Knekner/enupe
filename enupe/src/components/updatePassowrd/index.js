@@ -34,7 +34,7 @@ class UpdatePassowrd extends React.Component {
             password: this.state.password,
             hash: this.state.hash
         });
-        this.setState({ success: data.success });
+        this.setState({ success: data.correct });
     }
 }
 
