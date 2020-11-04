@@ -30,11 +30,12 @@ class System extends UserManager{
       t.verifyMatricula(res, req.body.matricula);
     });
 
-    this.app.post('/server/user/keyRecovery', function(req,res) {
+    this.app.post('/server/user/keyRecovery', function(req) {
       t.keyRecovery(req.body.user);
     });
+
     this.app.post('/server/user/updatePassword', function(req,res){
-      t.updateKey(req.body);
+      t.updateKey(res,req.body);
     });
   
   }

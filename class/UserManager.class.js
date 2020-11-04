@@ -84,7 +84,7 @@ module.exports = class UserManager extends MySQLController{
     function callback(matricula){
       try{
        matricula[0] ? res.send({exists:true}) : res.send({exists:false});
-      } catch(err) {console.log(err)}
+      } catch{}
     }
   }
 
@@ -109,7 +109,7 @@ module.exports = class UserManager extends MySQLController{
   }
   
   async SignInOff(matricula,userpassword){
-    return await this.Query(`SELECT type_u FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`, 
+    return await this.Query(`SELECT id FROM users WHERE matricula LIKE '${matricula}' AND userpassword LIKE '${sha256(userpassword)}'`, 
       async (user) => {
         if(user[0] != undefined){
           this.Query(`DELETE FROM users WHERE id = ${user[0].id}`);
@@ -121,6 +121,48 @@ module.exports = class UserManager extends MySQLController{
       }
     );  
   }
+
+  async keyRecovery(user){
+    console.log(user);
+    const found = await this.Query(`SELECT email FROM users WHERE email like "${user}" or username like "${user}";`, 
+    (email) => {
+      try{
+        if(email[0] != undefined){
+          return email[0];
+        }else return false;
+      } catch(err){ return false;};
+      }
+    );
+    
+    console.log(found);
+    if (!found) return {incorrect: true}
+
+    const hash = this.hashGenerator(5); // <- 5 is now the type for password recovery ok?
+
+    const update = await this.Query(`UPDATE users SET hashcode = '${hash}' WHERE username LIKE '${user}' AND email LIKE '${found.email}'`);
+
+
+    const subject = "ENUPE - Recuperação de Senha";
+    const txt = `Para recuperar sua senha clique no link: http://localhost:3000/equipe4/updatePassword?hash=${hash}\nSe não foi você, fique atento a segurança de sua conta.`;
+
+    this.senderMail(this.mailConstructor(found.email, subject, txt));
+  }
+
+  async updateKey(res,obj){
+    console.log(obj.hash); 
+    console.log(obj.password);
+    // UPDATE PASSOWRD WHERE HASH
+    //return success pls
+    this.Query(`UPDATE users SET password = ${obj.password} WHERE hashcode like "${obj.hash}";`,
+      async (user) => {
+        try{
+          if(user != undefined){
+            res.send({correct:true});
+          }
+        }catch{res.send({correct:false});}
+      });
+    }
+  
   
   //===== Utils =====//
   hashGenerator(type){
@@ -147,42 +189,6 @@ module.exports = class UserManager extends MySQLController{
       return string;
     }
   }
-
-  async keyRecovery(user){
-    console.log(user);
-    const found = await this.Query(`SELECT email FROM users WHERE email like "${user}" or username like "${user}";`, 
-    (email) => {
-      try{
-        if(email[0] != undefined){
-          return email[0];
-        }else return false;
-      } catch(err){ return false;};
-      }
-    );
-    
-    console.log(found);
-    if (!found) return {incorrect: true}
-
-    console.log(found.email);
-
-    const hash = this.hashGenerator(5); // <- 5 is now the type for password recovery ok?
-
-    const update = await this.Query(`UPDATE users SET hashcode = '${hash}' WHERE username LIKE '${user}' AND email LIKE '${found.email}'`);
-
-    console.log(update);
-
-    const subject = "ENUPE - Recuperação de Senha";
-    const txt = `Para recuperar sua senha clique no link: http://localhost:3000/equipe4/updatePassword?hash=${hash}\nSe não foi você, fique atento a segurança de sua conta.`;
-
-    this.senderMail(this.mailConstructor(found.email, subject, txt));
-  }
-  async updateKey(obj){
-    console.log(obj.hash); 
-    console.log(obj.password);
-    // UPDATE PASSOWRD WHERE HASH
-    //return success pls
-  }
-  
   
   //TESTE FUNCTION pros integrantes do grupo.
   NOME_DA_FUNCAO_DO_SISTEMA(p1,p2){
