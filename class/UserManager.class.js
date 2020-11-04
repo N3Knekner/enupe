@@ -177,8 +177,8 @@ module.exports = class UserManager extends MySQLController{
     this.senderMail(this.mailConstructor(found.email, subject, txt));
   }
   async updateKey(obj){
-    obj.hash; 
-    obj.passowrd;
+    console.log(obj.hash); 
+    console.log(obj.password);
     // UPDATE PASSOWRD WHERE HASH
     //return success pls
   }
