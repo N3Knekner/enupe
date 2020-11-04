@@ -17,6 +17,8 @@ export default async function(callback = (url="/")=>{}, url = "/"){
 
     function route(){
         if("/equipe4"+url === instantUrl) return;
+        else if ("/equipe4/desenvolvedores" === instantUrl
+        ||       "/equipe4/updatePassword" === instantUrl) return;
         callback(url);
     }
 }

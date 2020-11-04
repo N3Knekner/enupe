@@ -84,7 +84,7 @@ class App extends React.Component {
           <Switch>
             {/* Black list     */}
             <Route path="/desenvolvedores"><div/></Route>
-            
+            <Route path="/updatePassword"><div /></Route>
             {/* Black list End */}
 
             {/* Always will be the last route */}

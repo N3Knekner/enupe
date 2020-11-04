@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 import SignIn from '../signIn';
 import Login from '../login';
 import Center from '../center';
+import UpdatePassowrd from '../updatePassowrd';
 
 // Fast Scroll universal system
 let fastScroll;
@@ -21,6 +22,7 @@ function R(props) {
           <div className="flex w-full max-w-lg lg:pt-10 justify-center">
             <Route path="/" exact><Login callback={(url) => { props.history.push(url);}} /></Route>
             <Route path="/cadastro" exact><SignIn callback={(url) => { props.history.push(url);}} /></Route>
+            <Route path="/updatePassword"><UpdatePassowrd /></Route>
           </div>
           <span className="flex justify-center w-full max-w-lg text-gray-700 mt-3">Instituto Federal Catarinense</span>
           <span className="flex justify-center w-full max-w-lg text-gray-700">Câmpus Rio do Sul</span>
