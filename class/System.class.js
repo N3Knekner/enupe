@@ -33,6 +33,9 @@ class System extends UserManager{
     this.app.post('/server/user/keyRecovery', function(req,res) {
       t.keyRecovery(req.body.user);
     });
+    this.app.post('/server/user/updatePassword', function(req,res){
+      t.updateKey(req.body);
+    });
   
   }
 

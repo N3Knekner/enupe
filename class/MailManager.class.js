@@ -17,7 +17,7 @@ module.exports = class MailManager{
 
     mailConstructor(email,subject,txt){
         let MAIL = {
-            from: `'${this.server_mail}'`,
+            from: this.server_mail,
             to: email,
             subject: subject,
             text: txt

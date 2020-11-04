@@ -148,21 +148,39 @@ module.exports = class UserManager extends MySQLController{
     }
   }
 
-  keyRecovery(user){
-    let t = this;
-    this.Query(`SELECT email FROM users WHERE email like "${user}" or username like "${user}";`, 
-    async (user) => {
+  async keyRecovery(user){
+    console.log(user);
+    const found = await this.Query(`SELECT email FROM users WHERE email like "${user}" or username like "${user}";`, 
+    (email) => {
       try{
-        if(user[0] != undefined){
-          let subject = "ENUPE - Recuperação de Senha";
-          let txt = 'Para recuperar sua senha clique no link:http://localhost:3000\nSe não foi você, fique atento a segurança de sua conta.';
-      
-          t.senderMail(t.mailConstructor(user[0].email,subject,txt));
-        }
-      } catch{};
+        if(email[0] != undefined){
+          return email[0];
+        }else return false;
+      } catch(err){ return false;};
       }
     );
     
+    console.log(found);
+    if (!found) return {incorrect: true}
+
+    console.log(found.email);
+
+    const hash = this.hashGenerator(5); // <- 5 is now the type for password recovery ok?
+
+    const update = await this.Query(`UPDATE users SET hashcode = '${hash}' WHERE username LIKE '${user}' AND email LIKE '${found.email}'`);
+
+    console.log(update);
+
+    const subject = "ENUPE - Recuperação de Senha";
+    const txt = `Para recuperar sua senha clique no link: http://localhost:3000/equipe4/updatePassword?hash=${hash}\nSe não foi você, fique atento a segurança de sua conta.`;
+
+    this.senderMail(this.mailConstructor(found.email, subject, txt));
+  }
+  async updateKey(obj){
+    obj.hash; 
+    obj.passowrd;
+    // UPDATE PASSOWRD WHERE HASH
+    //return success pls
   }
   
   
