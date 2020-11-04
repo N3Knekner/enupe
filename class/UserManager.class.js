@@ -123,7 +123,6 @@ module.exports = class UserManager extends MySQLController{
   }
 
   async keyRecovery(user){
-    console.log(user);
     const found = await this.Query(`SELECT email FROM users WHERE email like "${user}" or username like "${user}";`, 
     (email) => {
       try{
@@ -134,13 +133,10 @@ module.exports = class UserManager extends MySQLController{
       }
     );
     
-    console.log(found);
     if (!found) return {incorrect: true}
 
-    const hash = this.hashGenerator(5); // <- 5 is now the type for password recovery ok?
-
-    const update = await this.Query(`UPDATE users SET hashcode = '${hash}' WHERE username LIKE '${user}' AND email LIKE '${found.email}'`);
-
+    const hash = this.hashGenerator(5);
+    const update = await this.Query(`UPDATE users SET hashcode = '${hash}' WHERE email LIKE '${found.email}'`);
 
     const subject = "ENUPE - Recuperação de Senha";
     const txt = `Para recuperar sua senha clique no link: http://localhost:3000/equipe4/updatePassword?hash=${hash}\nSe não foi você, fique atento a segurança de sua conta.`;
@@ -149,20 +145,23 @@ module.exports = class UserManager extends MySQLController{
   }
 
   async updateKey(res,obj){
-    console.log(obj.hash); 
-    console.log(obj.password);
-    // UPDATE PASSOWRD WHERE HASH
-    //return success pls
-    this.Query(`UPDATE users SET password = ${obj.password} WHERE hashcode like "${obj.hash}";`,
+    this.Query(`SELECT id FROM users WHERE hashcode like '${obj.hash}'`, // só pra dar seguranca no code tipo verificacao de duas etapas
       async (user) => {
         try{
-          if(user != undefined){
+          console.log(user[0]);
+          if(user[0] != undefined){
+            this.Query(`UPDATE users SET userpassword = "${sha256(obj.password)}" WHERE id = ${user[0].id}`);
             res.send({correct:true});
           }
-        }catch{res.send({correct:false});}
-      });
-    }
-  
+          else{
+            res.send({correct:false});
+          }
+        }catch{
+          res.send({correct:false});
+        }
+      }
+    );
+  }
   
   //===== Utils =====//
   hashGenerator(type){
