@@ -24,13 +24,13 @@ export default function DevelopersCarrousel() {
       <div className="flex flex-row justify-center">
         <button onClick={() => setPointer(-1)} className="bg-white text-sm hover:bg-gray-500 shadow rounded p-4 m-2"><span className="hidden md:block">Anterior</span><span className="block md:hidden">{"<"}</span></button>
         {developers.map((e,i)=>{ return (
-          <span onClick={() => setItem(i)} class={"flex flex-col cursor-pointer justify-center items-center text-4xl hover:text-blue-700 mx-2 " + (item === i ? "text-green-500" : "text-gray-500")}><span>•</span></span>
+          <span onClick={() => setItem(i)} className={"flex flex-col cursor-pointer justify-center items-center text-4xl hover:text-blue-700 mx-2 " + (item === i ? "text-green-500" : "text-gray-500")} key={i.toString()}><span>•</span></span>
         )})}
         <button onClick={() => setPointer(1)} className="bg-white text-sm hover:bg-gray-500 shadow rounded p-4 m-2"><span className="hidden md:block">Próximo</span><span className="block md:hidden">{">"}</span></button>
       </div>
-      {developers.map((e,i)=>{
-        return <div className={"flex carousel-item flex-col md:flex-row justify-center " + (item === i ? "carousel-open":"")}>{e}</div>
-      })}
+      {developers.map((E,i)=>
+        <div className={"flex carousel-item flex-col md:flex-row justify-center " + (item === i ? "carousel-open" : "")} key={i.toString()}>{E}</div>
+      )}
     </>
 
   );

@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,6 +9,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --animationBreakpoint: 100vw;
+  --noImageFontSize: 5.6em;
 }
 
 code {
@@ -20,6 +24,7 @@ code {
 @media (min-width: 1024px){ 
   body{
     --animationBreakpoint: 50vw;
+    --noImageFontSize: 9.5em;
   }
   .arrow-hide {
     border:none!important;
@@ -133,4 +138,24 @@ code {
   display: none;
   -webkit-transition: opacity 0.6s ease-out;
   transition: opacity 0.6s ease-out;
+}
+
+.border-gradient-green {
+  /* bg-gradient-to-tl from-teal-400 to-green-600 */
+  /* border-image-slice: 1;
+  border-style: solid;
+  border-image-source: linear-gradient(to top left, #4fd1c5, #38a169); */
+  border-style: solid;
+  border-color: transparent;
+  background-image: linear-gradient(gray, gray), 
+                    linear-gradient(to top left, #4fd1c5, #38a169);;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+.border-gradient-green::after{
+  color: lightgray;
+  font-size: var(--noImageFontSize);
+  content:"E•";
+  position: absolute;
+  transform: translate(-50%,-15px);
 }

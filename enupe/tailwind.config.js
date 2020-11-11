@@ -7,6 +7,6 @@ module.exports = {
         'landscape': { 'raw': '(orientation: landscape)' },
       }},
   },
-  variants: {},
+  variants: { backgroundImage: ['responsive', 'hover', 'focus'],},
   plugins: [],
 }
