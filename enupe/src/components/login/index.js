@@ -37,8 +37,8 @@ class Login extends React.Component {
                     <span className="text-red-600">{(this.state.incorrect[1] ? "Senha incorreta." : "")}</span>
                 </div>
                 <div className="flex flex-row mb-2">
-                    <div className="flex-col justify-center"><input type="checkbox" checked={this.state.stayConnection} onChange={(e) => this.setState(this.setState({ stayConnection: e.target.checked }))} /></div>
-                    <label className="text-gray-700 text-md mx-2" htmlFor="password">Manter conectado</label>
+                    <div className="flex-col justify-center"><input type="checkbox" id="stayConnection" checked={this.state.stayConnection} onChange={(e) => this.setState(this.setState({ stayConnection: e.target.checked }))} /></div>
+                    <label className="text-gray-700 text-md mx-2" htmlFor="stayConnection">Manter conectado</label>
                 </div>
                 <div className="flex items-center justify-between text-sm sm:text-base">
                     <input type="submit" value="Entrar" className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:border-gray-600" />

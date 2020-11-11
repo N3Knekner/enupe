@@ -47,7 +47,7 @@ class App extends React.Component {
 
 
             {/* Perfil section and childrens */}
-            <Route path={["/perfil", "/ocorrencias", "/agenda", "/nota"]}>
+            <Route path={["/perfil", "/ocorrencias", "/agenda", "/notas"]}>
               <Center customcss="max-w-xs"><UserMenu fastScroll={this.fastScroll}/></Center>
             </Route>
 
@@ -61,7 +61,7 @@ class App extends React.Component {
         <Sides.R isBody={this.state.haveHeader} fadeIn={this.state.fadeIn}>
 
           {/* Body expander for footer */}
-          <div className="flex flex-row w-full justify-center flex-grow" ref={this.fastScroll}>
+          <div className="flex flex-row w-full justify-center flex-grow overflow-y-scroll overflow-visible" ref={this.fastScroll}>
 
             <Switch>
               {/* Developers page body */}
@@ -93,7 +93,7 @@ class App extends React.Component {
             {/* Black list End */}
 
             {/* Always will be the last route */}
-            <Route path="/"><div className="flex flex-row justify-end"><Link to="/desenvolvedores" className="text-gray-700 text-sm hover:underline m-5">Sobre os desenvolvedores</Link></div></Route>
+            <Route path="/"><div className="flex flex-row justify-end bg-gradient-to-t from-gray-100 to-transparent"><Link to="/desenvolvedores" className="text-gray-700 text-sm hover:underline m-5">Sobre os desenvolvedores</Link></div></Route>
           </Switch>
 
         </Sides.R>

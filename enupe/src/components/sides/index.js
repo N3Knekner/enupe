@@ -5,7 +5,7 @@ function L(props) {
 }
 
 function R(props) {
-    return <div id="right" className={"flex flex-1 flex-col "+ (props.isBody ? "body" : "half") + (props.fadeIn ? " fade" : "") +" bg-gray-100 justify-center"}>{props.children}</div>;
+    return <div id="right" className={"flex flex-1 flex-col " + (props.isBody ? "body" : "half") + (props.fadeIn ? " fade" : "") +" bg-gray-100 justify-center max-h-screen"}>{props.children}</div>;
 }
 
 export default {R,L};

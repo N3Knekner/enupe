@@ -32,6 +32,9 @@ code {
   .min-w-25{
     min-width:25rem;
   }
+  .max-w-25{
+    max-width:25rem;
+  }
 }
 
 .arrow {

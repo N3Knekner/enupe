@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import GetData from '../../classes/GetData.js';
-import { Route, withRouter } from 'react-router';
+import { Route, withRouter, matchPath } from 'react-router';
 
 class UserMenu extends React.Component {
     constructor(props) {
         super();
         this.state = { data: { username: "Carregando..."} }
-        this.linkCss = "flex flex-1 rounded text-base p-2 justify-center hover:text-white hover:bg-gradient-to-tl from-teal-400 to-green-600 ";
+        this.linkCss = "flex flex-1 rounded text-base p-2 justify-center hover:text-white hover:bg-gradient-to-tl from-teal-300 to-green-500 ";
         this.fastScroll = props.fastScroll;
         this.scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
         this.executeScroll = () => this.scrollToRef(this.fastScroll);
@@ -16,7 +16,14 @@ class UserMenu extends React.Component {
         const hash = localStorage.getItem('authenticated') || sessionStorage.getItem('authenticated');
         if (hash == null) this.props.history.push('/');
 
-        this.setState({ data: await GetData("/user/hash"), selected:0 });
+        const instantUrl = window.location.pathname;
+
+        let x = 0;
+        if (matchPath( instantUrl, { path: "/equipe4/ocorrencias" })) x = 1; else
+        if (matchPath( instantUrl, { path:"/equipe4/agenda" }))       x = 2; else
+        if (matchPath( instantUrl, { path:"/equipe4/notas" }))        x = 3; //else
+        //if (matchPath("/equipe4")) x = 1;
+        this.setState({ data: await GetData("/user/hash"), selected:x });
 
     }
     componentDidUpdate(){
@@ -40,7 +47,7 @@ class UserMenu extends React.Component {
                         </Route>
                         <Route path="/(.*)/(estudante)?/(responsavel)?">
                             <hr />
-                            <Link to="/nota/estudante" className={this.linkCss + (this.state.selected === 3 ? "bg-gray-300" : "")} onClick={() => { this.setState({ selected: 3 })}}>Notas</Link>
+                            <Link to="/notas/estudante" className={this.linkCss + (this.state.selected === 3 ? "bg-gray-300" : "")} onClick={() => { this.setState({ selected: 3 })}}>Notas</Link>
                         </Route>
                         <hr/>
                         <Link to="/" className="flex flex-1 rounded text-sm text-blue-500 justify-center hover:text-white hover:bg-gradient-to-tl from-teal-400 to-blue-600" onClick={() => { localStorage.removeItem('authenticated'); sessionStorage.removeItem('authenticated'); this.props.history.push('/')}}>SAIR</Link>
