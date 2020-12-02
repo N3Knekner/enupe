@@ -19,6 +19,7 @@ module.exports = class Ocurrence {
             for(let index = 0; index < ocurrences.length; index++) {
                 obj[index] = new Ocurrence(this.DATABASE,ocurrences[index].title,ocurrences[index].txt,ocurrences[index].gravity,ocurrences[index]._from,ocurrences[index]._to,ocurrences[index]._date,ocurrences[index].orig);
             };
+            console.log(obj);
             res.send(obj);
         }
     

@@ -39,15 +39,12 @@ class System extends UserManager{
       t.updateKey(res,req.body);
     });
 
-    this.app.get('/server/testeget', function(req,res){
-      let  x= new Ocurrence(t);
-      x.get(res,'123456789');
+    this.app.get('/server/user/ocurrence', function(req,res){
+      new Ocurrence(t).get(res,'123456789');
     });
 
-    this.app.get('/server/testesave', function(req,res){
-      res.send('a');
-      let o = new Ocurrence(t,"the title","loren loren rwoivjieojv",1,"1234567",[["123456789"]],'2020-11-30',"0");
-      o.save();
+    this.app.get('/server/user/ocurrence/new', function(req,res){
+      new Ocurrence(t,"the title","loren loren rwoivjieojv",1,"1234567",[["123456789"]],'2020-11-30',"0").save();
     });
   
   }
