@@ -1,6 +1,7 @@
 const UserManager = require("./UserManager.class.js");
+const Ocurrence = require("./Occurrence.class.js");
 class System extends UserManager{
-
+  
   async begin(app,db_host,db_user,db_password,db_name,email_host,email_port,addr_email,email_password){
     this.app = app;
     const connected = await this.sqlBegin(db_host,db_user,db_password,db_name);
@@ -37,13 +38,24 @@ class System extends UserManager{
     this.app.post('/server/user/updatePassword', function(req,res){
       t.updateKey(res,req.body);
     });
+
+    this.app.get('/server/testeget', function(req,res){
+      let  x= new Ocurrence(t);
+      x.get(res,'123456789');
+    });
+
+    this.app.get('/server/testesave', function(req,res){
+      res.send('a');
+      let o = new Ocurrence(t,"the title","loren loren rwoivjieojv",1,"1234567",[["123456789"]],'2020-11-30',"0");
+      o.save();
+    });
   
   }
-
   closeServer(){
     process.exit(1);
-  }
+  } 
 
 }
+
 
 module.exports = new System();
