@@ -6,8 +6,8 @@ function OcurrenceCard(props) {
   const [ open, setOpen ] = useState(false);
 
   return (
-    <div className="flex-initial flex-col m-4 bg-white rounded shadow text-gray-900">
-      <div className={"from-" + alertColor[o.gravity][0] + " to-" + alertColor[o.gravity][1] + " rounded-t flex flex-row justify-between p-2 bg-gradient-to-r"}>
+    <div className="flex-initial flex-col m-4 bg-white rounded shadow-md text-gray-900">
+      <div className={"from-" + alertColor[o.gravity][0] + " to-" + alertColor[o.gravity][1] + " rounded-t flex flex-row shadow justify-between p-2 bg-gradient-to-r"}>
         <h2>{o.title}</h2>
         <span className="text-white">de: {o.from.name}</span>
       </div>

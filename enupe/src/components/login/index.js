@@ -51,7 +51,7 @@ class Login extends React.Component {
     }
     submitform = async (e)=>{
         e.preventDefault();
-        const r = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/; //Regexp que determina se a string tem 8+ caracteres entre letras e numeros
+        const r = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/; //Regexp que determina se a string tem 8+ caracteres entre letras e numeros
         if (!r.exec(this.state.password)) { this.setState({ incorrect: [false, true] }); return;};
         
         const { data } = await Axios.post(Axios.defaults.baseUrl+"/login", { user:this.state.email, password:this.state.password});

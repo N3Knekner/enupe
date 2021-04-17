@@ -6,6 +6,7 @@ import Home from './components/home';
 import UserMenu from './components/userMenu';
 import DevelopersCarrousel from './components/developersCarrousel';
 import Ocurrences from './components/ocurrences';
+import Grades from './components/grades'
 
 import Center from './components/center';
 import AnimationHandler from './components/animationHandler';
@@ -61,7 +62,7 @@ class App extends React.Component {
         <Sides.R isBody={this.state.haveHeader} fadeIn={this.state.fadeIn}>
 
           {/* Body expander for footer */}
-          <div className="flex flex-row w-full justify-center flex-grow overflow-y-scroll overflow-visible" ref={this.fastScroll}>
+          <div className="flex flex-row w-full justify-center flex-grow overflow-y-auto overflow-visible" ref={this.fastScroll}>
 
             <Switch>
               {/* Developers page body */}
@@ -76,6 +77,9 @@ class App extends React.Component {
               </Route>
               <Route path="/ocorrencias">
                 <Ocurrences />
+              </Route>
+              <Route path="/notas">
+                <Grades />
               </Route>
 
               {/* Always will be the last route */}

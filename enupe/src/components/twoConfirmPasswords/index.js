@@ -28,7 +28,7 @@ class TwoConfirmPasswords extends React.Component {
             this.props.update(this.state.password);
     }
     checkPassowrdCharacters() {
-        const r = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$/; //Regexp que determina se a string tem 8+ caracteres entre letras e numeros
+        const r = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/; //Regexp que determina se a string tem 8+ caracteres entre letras e numeros
         if (!r.exec(this.state.password) && this.state.password !== "")
             this.setState((state) => ({ requiriments: [false, state.requiriments[1]] }));
         else this.setState({ requiriments: [true, true] });
